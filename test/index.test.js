@@ -286,7 +286,7 @@ describe( '@parellin/geohash', () => {
 					s: 'dqcjpxetzh6m',
 					se: 'dqcjpxetzh6t'
 				},
-				actual   = Geohash.neighbours( 'dqcjpxetzh6q' );
+				actual   = Geohash.neighbors( 'dqcjpxetzh6q' );
 			
 			expect( actual ).to.deep.eq( expected );
 		}
