@@ -25,5 +25,10 @@
 		"chai-as-promised": "7.1.1",
 		"eslint": "5.10.0",
 		"mocha": "5.2.0"
-	}
+	},
+	"directories": {
+		"doc": "docs",
+		"test": "test"
+	},
+	"dependencies": {}
 }

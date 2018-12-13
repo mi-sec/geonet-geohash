@@ -250,6 +250,12 @@ class Geohash
 			se: Geohash.adjacent( Geohash.adjacent( geohash, 's' ), 'e' )
 		};
 	};
+	
+	static getFillGeohashes( bbox, precision )
+	{
+		// dqbcj3vy
+		
+	}
 }
 
 Geohash.base32 = '0123456789bcdefghjkmnpqrstuvwxyz';
