@@ -2,6 +2,21 @@
 
 Geohash decode/encoder
 
+| Precision | Width       | Height      |
+|:---------:|:-----------:|:-----------:|
+| 1         | `≤ 5,000km` | `× 5,000km` |
+| 2         | `≤ 1,250km` | `× 625km`   |
+| 3         | `≤ 156km`   | `× 156km`   |
+| 4         | `≤ 39.1km`  | `× 19.5km`  |
+| 5         | `≤ 4.89km`  | `× 4.89km`  |
+| 6         | `≤ 1.22km`  | `× 0.61km`  |
+| 7         | `≤ 153m`    | `× 153m`    |
+| 8         | `≤ 38.2m`   | `× 19.1m`   |
+| 9         | `≤ 4.77m`   | `× 4.77m`   |
+| 10        | `≤ 1.19m`   | `× 0.596m`  |
+| 11        | `≤ 149mm`   | `× 149mm`   |
+| 12        | `≤ 37.2mm`  | `× 18.6mm`  |
+
 [![NPM](https://nodei.co/npm/@parellin/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@parellin/lightmap)
 
 ### Installation
@@ -14,7 +29,7 @@ Geohash decode/encoder
 ```
 const Geohash = require( '@parellin/geohash' );
 
-const geohash = Geohash.encode( 52.205, 0.119, 7 ); // geohash: 'u120fxw'
+const geohash = Geohash.encode( 38.866, -77.480, 7 ); // geohash: 'dqbvhgk'
 ```
 
 ### `encode`
@@ -23,13 +38,13 @@ Encodes latitude/longitude to geohash, either to specified precision or to autom
 
 **params**
 - `lat` {number} Latitude in degrees.
-- `lon` {number} Longitude in degrees.
+- `lng` {number} Longitude in degrees.
 - `precision` {number} Number of characters in resulting geohash.
 
 **returns**: Geohash of supplied latitude/longitude.
 
 ```javascript
-const geohash = Geohash.encode( 52.205, 0.119, 7 ); // geohash: 'u120fxw'
+const geohash = Geohash.encode( 38.8665, -77.480, 7 ); // geohash: 'dqbvhgk'
 ```
 
 ### `decode`
@@ -42,7 +57,7 @@ Decode geohash to latitude/longitude (location is approximate centre of geohash 
 **returns**: (Center of) geohashed location.
 
 ```javascript
-const latlon = Geohash.decode( 'u120fxw' ); // latlon: { lat: 52.205, lon: 0.1188 }
+const latlng = Geohash.decode( 'dqbvhgk' ); // latlng: { lat: 38.8662, lng: -77.4804 }
 ```
 
 ### `neighbors`
@@ -55,7 +70,7 @@ Returns all 8 adjacent cells to specified geohash.
 **returns**: surrounding geohashes
 
 ```javascript
-const latlon = Geohash.neighbors( 'u120fxw' );
+const latlng = Geohash.neighbors( 'dqcjpxetzh6q' );
 // {
 // 		nw: 'dqcjpxetzh6p',
 // 		n: 'dqcjpxetzh6r',
