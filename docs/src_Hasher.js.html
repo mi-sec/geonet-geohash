@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/Hasher.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/Hasher.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
+ * @file: Hasher.js
+ * Project: geohash
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 13-Dec-2018
+ *******************************************************************************************************/
+'use strict';
+
+const
+	Readable       = require( 'stream' ).Readable,
+	geohash        = require( 'ngeohash' ),
+	pointInPolygon = require( '@turf/boolean-point-in-polygon' ),
+	turfExtent     = require( 'turf-extent' ),
+	{
+		polygon,
+		featureCollection
+	}              = require( '@turf/helpers' ),
+	intersect      = require( '@turf/intersect' ),
+
+	turf           = {
+		extent: turfExtent,
+		featurecollection: turfFeaturecollection,
+		polygon: turfPolygon,
+		intersect: turfIntersect
+	},
+
+	through2       = require( 'through2' ),
+	async          = require( 'async' ),
+	geojsonArea    = require( 'geojson-area' );
+
+/**
+ * utilizing point-in-poly but providing support for geojson polys and holes.
+ */
+const inside = function( point, geopoly ) {
+	if( geopoly.type !== 'Polygon' &amp;&amp; geopoly.type !== 'MultiPolygon' ) {
+		return false;
+	}
+
+	const shape = geopoly.type === 'Polygon' ? [ geopoly.coordinates ] : geopoly.coordinates;
+	let inside  = 0;
+
+	shape.forEach( p => p.forEach( ring => {
+		if( pointInPolygon( [ point.longitude, point.latitude ], ring ) ) {
+			inside++;
+		}
+	} ) );
+	return inside % 2;
+};
+
+
+/*
+ * Hasher, extends Readable
+ * a stream that will provide a readable list of hashes, row by row.
+ *
+ * Calculate geohashes of specified precision that cover the (Multi)Polygon provided
+ * Note, duplicates may occur.
+ */
+const Hasher = function( options = {} ) {
+	const defaults = {
+		precision: options.integerMode === true ? 32 : 6,
+		rowMode: false,
+		integerMode: false,
+		geojson: [],
+		splitAt: 2000,
+		hashMode: 'inside',
+		threshold: 0
+	};
+
+	for( const attrname in defaults ) {
+		this[ attrname ] = options.hasOwnProperty( attrname ) &amp;&amp;
+		( options[ attrname ] !== null &amp;&amp; typeof options[ attrname ] !== 'undefined' ) ?
+			options[ attrname ] :
+			defaults[ attrname ];
+	}
+
+	this.isMulti = Array.isArray( this.geojson[ 0 ][ 0 ][ 0 ] );
+	this.geojson = !this.isMulti ? [ this.geojson ] : this.geojson;
+	this.geojson = this.geojson.map( function( el ) {
+		return polygon( el );
+	} );
+
+	if( this.integerMode ) {
+		this.geohashEncode     = geohash.encode_int;
+		this.geohashDecode     = geohash.decode_int;
+		this.geohashDecodeBbox = geohash.decode_bbox_int;
+		this.geohashNeighbor   = geohash.neighbor_int;
+	} else {
+		this.geohashEncode     = geohash.encode;
+		this.geohashDecode     = geohash.decode;
+		this.geohashDecodeBbox = geohash.decode_bbox;
+		this.geohashNeighbor   = geohash.neighbor;
+	}
+
+	Readable.call( this, {
+		objectMode: this.rowMode
+	} );
+};
+require( 'util' ).inherits( Hasher, Readable );
+
+
+/**
+ * _read(), for Readable
+ * gets your next row of hashes.
+ * If not in rowMode, will push each hash to buffer
+ * if there are no polygons remaining in the geojson, push null to end stream
+ */
+Hasher.prototype._read = function() {
+	var self   = this;
+	var hashes = [];
+	async.whilst( function() {
+		return !hashes.length &amp;&amp; self.geojson.length;
+	}, function( callback ) {
+		self.getNextRow( function( err, results ) {
+			hashes = results || [];
+			callback( err );
+		} );
+	}, function() {
+		if( !self.geojson.length &amp;&amp; !hashes.length ) return self.push( null );
+		if( self.rowMode ) return self.push( hashes );
+		hashes.forEach( function( h ) {
+			self.push( h );
+		} );
+	} );
+};
+
+
+/**
+ * getNextRow()
+ * will get the next row of geohashes for the current length-1 polygon in the list.
+ * only uses the current row bounds for checking pointinpoly
+ * rowHash persists so that it is available on the next iteration while the poly is still the same
+ */
+Hasher.prototype.getNextRow = function( done ) {
+	var self           = this,
+		currentGeojson = self.geojson[ self.geojson.length - 1 ];
+
+	var makeRow = function() {
+
+		if( !self.rowHash ) {
+			self.rowHash = self.geohashEncode( self.bounding[ 2 ], self.bounding[ 1 ], self.precision );
+		}
+
+		var rowBox     = self.geohashDecodeBbox( self.rowHash, self.precision ),
+			columnHash = self.rowHash,
+			rowBuffer  = 0.0002,
+			rowHashes  = [];
+
+		var preparePoly = function( next ) {
+			// Detect poly length
+			if( self.hashMode !== 'extent' &amp;&amp; currentGeojson.geometry.coordinates[ 0 ].length >= self.splitAt ) {
+
+				var clipper = polygon( [ [
+					[ self.bounding[ 1 ] - rowBuffer, rowBox[ 2 ] + rowBuffer ], // nw
+					[ self.bounding[ 3 ] + rowBuffer, rowBox[ 2 ] + rowBuffer ], // ne
+					[ self.bounding[ 3 ] + rowBuffer, rowBox[ 0 ] - rowBuffer ], // se
+					[ self.bounding[ 1 ] - rowBuffer, rowBox[ 0 ] - rowBuffer ], //sw
+					[ self.bounding[ 1 ] - rowBuffer, rowBox[ 2 ] + rowBuffer ] //nw
+				] ] );
+
+				var intersection = turf.intersect( featureCollection( [ clipper ] ), featureCollection( [ currentGeojson ] ) );
+				if( intersection &amp;&amp; intersection.features.length ) {
+					// Calculate the row bounding and column hash based on the intersection
+					var intersectionFeature = { type: 'Feature', geometry: intersection.features[ 0 ], properties: {} };
+					var extent              = turf.extent( featureCollection( [ intersectionFeature ] ) );
+					// extent = [minX, minY, maxX, maxY], remap to match geohash lib
+					self.rowBounding        = [ extent[ 1 ], extent[ 0 ], extent[ 3 ], extent[ 2 ] ];
+					var midY                = self.rowBounding[ 0 ] + ( self.rowBounding[ 2 ] - self.rowBounding[ 0 ] ) / 2;
+					columnHash              = self.geohashEncode( midY, self.rowBounding[ 1 ], self.precision );
+					next( null, intersection.features[ 0 ] );
+				} else {
+					next( null, currentGeojson.geometry );
+				}
+
+			} else {
+				next( null, currentGeojson.geometry );
+			}
+		};
+
+
+		preparePoly( function( err, prepared ) {
+			var columnCenter = self.geohashDecode( columnHash, self.precision ),
+				westerly     = self.geohashNeighbor( self.geohashEncode( columnCenter.latitude, self.rowBounding[ 3 ], self.precision ), [ 0, 1 ], self.precision );
+			while( columnHash !== westerly ) {
+				if( self.hashMode === 'inside' &amp;&amp; inside( columnCenter, prepared ) ) {
+					rowHashes.push( columnHash );
+				} else if( self.hashMode === 'intersect' || self.hashMode === 'extent' ) {
+					rowHashes.push( columnHash );
+				}
+				columnHash   = self.geohashNeighbor( columnHash, [ 0, 1 ], self.precision );
+				columnCenter = self.geohashDecode( columnHash, self.precision );
+			}
+
+			var southNeighbour = self.geohashNeighbor( self.rowHash, [ -1, 0 ], self.precision );
+
+			// Check if the current rowHash was already the most southerly hash on the map.
+			// Also check if we are at or past the bottom of the bounding box.
+			if( southNeighbour === self.rowHash || rowBox[ 0 ] &lt;= self.bounding[ 0 ] ) {
+				self.geojson.pop();
+				self.rowHash     = null;
+				self.bounding    = null;
+				self.rowBounding = null;
+			} else {
+				self.rowHash = southNeighbour;
+			}
+
+			if( self.hashMode === 'inside' || self.hashMode === 'extent' || !rowHashes.length ) {
+				done( null, rowHashes );
+			} else if( self.hashMode === 'intersect' ) {
+
+				var baseArea = null;
+				async.filter( rowHashes, function( h, cb ) {
+					var bb = self.geohashDecodeBbox( h, self.precision );
+					bb     = polygon( [ [
+						[ bb[ 1 ], bb[ 2 ] ],
+						[ bb[ 3 ], bb[ 2 ] ],
+						[ bb[ 3 ], bb[ 0 ] ],
+						[ bb[ 1 ], bb[ 0 ] ],
+						[ bb[ 1 ], bb[ 2 ] ]
+					] ] );
+
+					if( !baseArea ) baseArea = geojsonArea.geometry( bb.geometry );
+
+					const intersected    = turf.intersect( featureCollection( [ polygon( prepared.coordinates ) ] ), featureCollection( [ bb ] ) );
+					let keepIntersection = !self.threshold;
+
+					if( self.threshold &amp;&amp; intersected.features.length &amp;&amp; ( intersected.features[ 0 ].type === 'Polygon' || intersected.features[ 0 ].type === 'MultiPolygon' ) ) {
+						const intersectedArea = geojsonArea.geometry( intersected.features[ 0 ] );
+						keepIntersection      = baseArea &amp;&amp; intersectedArea / baseArea >= self.threshold;
+					}
+					cb( keepIntersection );
+				}, function( results ) {
+					done( null, results );
+				} );
+			}
+
+		} );
+	};
+
+	if( !this.bounding ) {
+		const extent     = turf.extent( featureCollection( [ currentGeojson ] ) );
+		// extent = [minX, minY, maxX, maxY], remap to match geohash lib
+		self.bounding    = [ extent[ 1 ], extent[ 0 ], extent[ 3 ], extent[ 2 ] ];
+		self.rowBounding = self.bounding.slice( 0 );
+		makeRow();
+	} else {
+		makeRow();
+	}
+
+};
+
+
+/**
+ * initializes the Hasher, as a stream
+ */
+	  // var streamer = module.exports.stream = function (coords, precision, rowMode, hashMode) {
+var streamer = function( options ) {
+		  return new Hasher( {
+			  geojson: options.coords,
+			  precision: options.precision,
+			  rowMode: options.rowMode ? true : false,
+			  integerMode: options.integerMode ? true : false,
+			  hashMode: options.hashMode,
+			  threshold: options.threshold
+		  } );
+	  };
+
+
+/**
+ * intializes the Hasher, but processes the results before returning an array.
+ */
+module.exports = function( options, next ) {
+	options.rowMode = true;
+
+	var hasher = streamer( options );
+
+	var results = [];
+
+	hasher
+		.on( 'end', function() {
+			next( null, results );
+		} )
+		.pipe( through2.obj( function( arr, enc, callback ) {
+			results = results.concat( arr );
+			callback();
+		} ) );
+};
+
+module.exports.stream = streamer;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Geohash.html">Geohash</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bbox">bbox</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#inside">inside</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#streamer">streamer</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 14 2018 07:03:31 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

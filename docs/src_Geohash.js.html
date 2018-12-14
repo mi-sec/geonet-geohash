@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/Geohash.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/Geohash.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
+ * File: Geohash.js
+ * Project: geohash
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 10-Dec-2018
+ *******************************************************************************************************/
+'use strict';
+
+const
+	BBox = require( './BBox' );
+
+/**
+ * Geohash
+ */
+class Geohash
+{
+	/**
+	 * encode
+	 * Encodes latitude/longitude to geohash, either to specified precision or to automatically
+	 * evaluated precision.
+	 *
+	 * @param   {number} lat - Latitude in degrees.
+	 * @param   {number} lng - Longitude in degrees.
+	 * @param   {number} [precision] - Number of characters in resulting geohash.
+	 * @returns {string} Geohash of supplied latitude/longitude.
+	 * @throws  Invalid geohash.
+	 *
+	 * @example
+	 *     var geohash = Geohash.encode(52.205, 0.119, 7); // geohash: 'u120fxw'
+	 */
+	static encode( lat, lng, precision )
+	{
+		// infer precision?
+		if( !precision ) {
+			if( ~~lat === lat &amp;&amp; ~~lng === lng ) {
+				precision = 0;
+			} else {
+				const
+					latLen  = +( lat.toString( 10 ).length ),
+					lngLen  = +( lng.toString( 10 ).length ),
+					average = ( latLen + lngLen ) / 2;
+
+				precision = average >= 12 ? 12 : average;
+			}
+		}
+
+		lat       = +lat;
+		lng       = +lng;
+		precision = +precision;
+
+		if( !( lat &amp;&amp; lat === lat ) || !( lng &amp;&amp; lng === lng ) || !( precision &amp;&amp; precision === precision ) ) {
+			throw new Error( 'Invalid geohash' );
+		}
+
+		let
+			idx     = 0, // index into BASE32 map
+			bit     = 0, // each char holds 5 bits
+			evenBit = true,
+			geohash = '',
+			latMin  = -90,
+			latMax  = 90,
+			lngMin  = -180,
+			lngMax  = 180;
+
+		while( geohash.length &lt; precision ) {
+			if( evenBit ) {
+				// bisect E-W longitude
+				let lngMid = ( lngMin + lngMax ) / 2;
+
+				if( lng >= lngMid ) {
+					idx    = idx * 2 + 1;
+					lngMin = lngMid;
+				} else {
+					idx    = idx * 2;
+					lngMax = lngMid;
+				}
+			} else {
+				// bisect N-S latitude
+				const latMid = ( latMin + latMax ) / 2;
+
+				if( lat >= latMid ) {
+					idx    = idx * 2 + 1;
+					latMin = latMid;
+				} else {
+					idx    = idx * 2;
+					latMax = latMid;
+				}
+			}
+
+			evenBit = !evenBit;
+
+			if( ++bit === 5 ) {
+				// 5 bits gives us a character: append it and start over
+				geohash += Geohash.BASE32.charAt( idx );
+				bit = 0;
+				idx = 0;
+			}
+		}
+
+		return geohash;
+	}
+
+	/**
+	 * decode
+	 * Decode geohash to latitude/longitude (location is approximate centre of geohash cell,
+	 * to reasonable precision).
+	 *
+	 * @param   {string} geohash - Geohash string to be converted to latitude/longitude.
+	 * @returns {{lat:number, lng:number}} (Center of) geohashed location.
+	 * @throws  Invalid geohash.
+	 *
+	 * @example
+	 *     var latlng = Geohash.decode('u120fxw'); // latlng: { lat: 52.205, lng: 0.1188 }
+	 */
+	static decode( geohash )
+	{
+		const
+			bounds = Geohash.bounds( geohash ),
+			latMin = bounds.sw.lat,
+			lngMin = bounds.sw.lng,
+			latMax = bounds.ne.lat,
+			lngMax = bounds.ne.lng;
+
+		let
+			lat = ( latMin + latMax ) / 2,
+			lng = ( lngMin + lngMax ) / 2;
+
+		// round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
+		lat = lat.toFixed( ~~( 2 - Math.log( latMax - latMin ) / Math.LN10 ) );
+		lng = lng.toFixed( ~~( 2 - Math.log( lngMax - lngMin ) / Math.LN10 ) );
+
+		return { lat: +lat, lng: +lng };
+	}
+
+	/**
+	 * bounds
+	 * @description
+	 * Returns SW/NE latitude/longitude bounds of specified geohash.
+	 * @param   {string} geohash - Cell that bounds are required of.
+	 * @returns {{sw: {lat: number, lng: number}, ne: {lat: number, lng: number}}} lat/lng
+	 * @throws  Invalid geohash.
+	 */
+	static bounds( geohash )
+	{
+		if( geohash.length === 0 ) {
+			throw new Error( 'Invalid geohash' );
+		}
+
+		geohash = geohash.toLowerCase();
+
+		let
+			evenBit = true,
+			latMin  = -90,
+			latMax  = 90,
+			lngMin  = -180,
+			lngMax  = 180;
+
+		for( let i = 0; i &lt; geohash.length; i++ ) {
+			const
+				chr = geohash.charAt( i ),
+				idx = Geohash.BASE32.indexOf( chr );
+
+			if( idx === -1 ) {
+				throw new Error( 'Invalid geohash' );
+			}
+
+			for( let n = 4; n >= 0; n-- ) {
+				const bitN = idx >> n &amp; 1;
+
+				if( evenBit ) {
+					// longitude
+					const lngMid = ( lngMin + lngMax ) / 2;
+					bitN === 1 ? lngMin = lngMid : lngMax = lngMid;
+				} else {
+					// latitude
+					const latMid = ( latMin + latMax ) / 2;
+					bitN === 1 ? latMin = latMid : latMax = latMid;
+				}
+
+				evenBit = !evenBit;
+			}
+		}
+
+		return {
+			sw: { lat: latMin, lng: lngMin },
+			ne: { lat: latMax, lng: lngMax }
+		};
+	}
+
+	/**
+	 * Determines adjacent cell in given direction.
+	 *
+	 * @param {string} geohash - Cell to which adjacent cell is required.
+	 * @param {string} direction - Direction from geohash (N/S/E/W).
+	 * @returns {string} Geocode of adjacent cell.
+	 * @throws  Invalid geohash.
+	 */
+	static adjacent( geohash, direction )
+	{
+		geohash   = geohash.toLowerCase();
+		direction = direction.toLowerCase();
+
+		if( geohash.length === 0 ) {
+			throw new Error( 'Invalid geohash' );
+		} else if( 'nsew'.indexOf( direction ) === -1 ) {
+			throw new Error( 'Invalid direction' );
+		}
+
+		const
+			neighbour = {
+				n: [ 'p0r21436x8zb9dcf5h7kjnmqesgutwvy', 'bc01fg45238967deuvhjyznpkmstqrwx' ],
+				s: [ '14365h7k9dcfesgujnmqp0r2twvyx8zb', '238967debc01fg45kmstqrwxuvhjyznp' ],
+				e: [ 'bc01fg45238967deuvhjyznpkmstqrwx', 'p0r21436x8zb9dcf5h7kjnmqesgutwvy' ],
+				w: [ '238967debc01fg45kmstqrwxuvhjyznp', '14365h7k9dcfesgujnmqp0r2twvyx8zb' ]
+			},
+			border    = {
+				n: [ 'prxz', 'bcfguvyz' ],
+				s: [ '028b', '0145hjnp' ],
+				e: [ 'bcfguvyz', 'prxz' ],
+				w: [ '0145hjnp', '028b' ]
+			},
+			lastCh    = geohash.slice( -1 ),
+			type      = geohash.length % 2;
+
+		let parent = geohash.slice( 0, -1 );
+
+		if( border[ direction ][ type ].indexOf( lastCh ) !== -1 &amp;&amp; parent !== '' ) {
+			parent = Geohash.adjacent( parent, direction );
+		}
+
+		// append letter for direction to parent
+		return parent + Geohash.BASE32.charAt( neighbour[ direction ][ type ].indexOf( lastCh ) );
+	}
+
+	/**
+	 * neighbors
+	 * Returns all 8 adjacent cells to specified geohash.
+	 *
+	 * @param   {string} geohash - Geohash neighbors are required of.
+	 * @returns {{nw,n,ne,w,c,e,sw,s,se: string}} surrounding geohashes
+	 * @throws  Invalid geohash.
+	 */
+	static neighbors( geohash )
+	{
+		return {
+			nw: Geohash.adjacent( Geohash.adjacent( geohash, 'n' ), 'w' ),
+			n: Geohash.adjacent( geohash, 'n' ),
+			ne: Geohash.adjacent( Geohash.adjacent( geohash, 'n' ), 'e' ),
+			w: Geohash.adjacent( geohash, 'w' ),
+			c: geohash,
+			e: Geohash.adjacent( geohash, 'e' ),
+			sw: Geohash.adjacent( Geohash.adjacent( geohash, 's' ), 'w' ),
+			s: Geohash.adjacent( geohash, 's' ),
+			se: Geohash.adjacent( Geohash.adjacent( geohash, 's' ), 'e' )
+		};
+	}
+
+	/**
+	 * sizeOf
+	 * Calculate the size of a given geohash
+	 * | Precision | Width       | Height      |
+	 * |:---------:|:-----------:|:-----------:|
+	 * | 1         | `≤ 5,000km` | `× 5,000km` |
+	 * | 2         | `≤ 1,250km` | `× 625km`   |
+	 * | 3         | `≤ 156km`   | `× 156km`   |
+	 * | 4         | `≤ 39.1km`  | `× 19.5km`  |
+	 * | 5         | `≤ 4.89km`  | `× 4.89km`  |
+	 * | 6         | `≤ 1.22km`  | `× 0.61km`  |
+	 * | 7         | `≤ 153m`    | `× 153m`    |
+	 * | 8         | `≤ 38.2m`   | `× 19.1m`   |
+	 * | 9         | `≤ 4.77m`   | `× 4.77m`   |
+	 * | 10        | `≤ 1.19m`   | `× 0.596m`  |
+	 * | 11        | `≤ 149mm`   | `× 149mm`   |
+	 * | 12        | `≤ 37.2mm`  | `× 18.6mm`  |
+	 *
+	 * @param {string} geohash - Geohash to determine precision size
+	 * @return {{geohash: string, area: number, precision, width, height}} - area, width, and high in meters
+	 * @example
+	 *
+	 * Geohash.sizeOf( 'dqcjpxetz' );
+	 * // { geohash: 'dqcjpxetz', precision: 9, width: 4.77, height: 4.77, area: 22.7527 }
+	 */
+	static sizeOf( geohash )
+	{
+		if( geohash.length === 0 ) {
+			throw new Error( 'Invalid geohash' );
+		}
+
+		geohash = geohash.toLowerCase();
+
+		const
+			precision         = geohash.length,
+			{ width, height } = Geohash.PRECISION[ precision ],
+			area              = width * height;
+
+		return { geohash, precision, width, height, area };
+	}
+
+	static geohashWithin( bbox, precision )
+	{
+		if( bbox.constructor.name !== 'BBox' ) {
+			bbox = new BBox( bbox );
+		}
+
+		const
+			x1y1 = Geohash.encode( bbox.y1, bbox.x1 ),
+			x1y2 = Geohash.encode( bbox.y2, bbox.x1 );
+
+		console.log( x1y1 );
+		console.log( x1y2 );
+
+		return '';
+	}
+}
+
+Geohash.BASE32    = '0123456789bcdefghjkmnpqrstuvwxyz';
+Geohash.PRECISION = {
+	1: { width: 5000000, height: 5000000 },
+	2: { width: 1250000, height: 625000 },
+	3: { width: 156000, height: 156000 },
+	4: { width: 39100, height: 19500 },
+	5: { width: 4890, height: 4890 },
+	6: { width: 1220, height: 610 },
+	7: { width: 153, height: 153 },
+	8: { width: 38.2, height: 19.1 },
+	9: { width: 4.77, height: 4.77 },
+	10: { width: 1.19, height: 0.596 },
+	11: { width: 0.149, height: 0.149 },
+	12: { width: 0.0372, height: 0.0186 }
+};
+
+module.exports = Geohash;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Geohash.html">Geohash</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bbox">bbox</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#inside">inside</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#streamer">streamer</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 14 2018 07:03:31 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
