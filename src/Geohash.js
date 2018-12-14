@@ -38,19 +38,19 @@ class Geohash
 					latLen  = +( lat.toString( 10 ).length ),
 					lngLen  = +( lng.toString( 10 ).length ),
 					average = ( latLen + lngLen ) / 2;
-
+				
 				precision = average >= 12 ? 12 : average;
 			}
 		}
-
+		
 		lat       = +lat;
 		lng       = +lng;
 		precision = +precision;
-
+		
 		if( !( lat && lat === lat ) || !( lng && lng === lng ) || !( precision && precision === precision ) ) {
 			throw new Error( 'Invalid geohash' );
 		}
-
+		
 		let
 			idx     = 0, // index into BASE32 map
 			bit     = 0, // each char holds 5 bits
@@ -60,12 +60,12 @@ class Geohash
 			latMax  = 90,
 			lngMin  = -180,
 			lngMax  = 180;
-
+		
 		while( geohash.length < precision ) {
 			if( evenBit ) {
 				// bisect E-W longitude
 				let lngMid = ( lngMin + lngMax ) / 2;
-
+				
 				if( lng >= lngMid ) {
 					idx    = idx * 2 + 1;
 					lngMin = lngMid;
@@ -76,7 +76,7 @@ class Geohash
 			} else {
 				// bisect N-S latitude
 				const latMid = ( latMin + latMax ) / 2;
-
+				
 				if( lat >= latMid ) {
 					idx    = idx * 2 + 1;
 					latMin = latMid;
@@ -85,9 +85,9 @@ class Geohash
 					latMax = latMid;
 				}
 			}
-
+			
 			evenBit = !evenBit;
-
+			
 			if( ++bit === 5 ) {
 				// 5 bits gives us a character: append it and start over
 				geohash += Geohash.BASE32.charAt( idx );
@@ -95,10 +95,10 @@ class Geohash
 				idx = 0;
 			}
 		}
-
+		
 		return geohash;
 	}
-
+	
 	/**
 	 * decode
 	 * Decode geohash to latitude/longitude (location is approximate centre of geohash cell,
@@ -119,18 +119,18 @@ class Geohash
 			lngMin = bounds.sw.lng,
 			latMax = bounds.ne.lat,
 			lngMax = bounds.ne.lng;
-
+		
 		let
 			lat = ( latMin + latMax ) / 2,
 			lng = ( lngMin + lngMax ) / 2;
-
+		
 		// round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
 		lat = lat.toFixed( ~~( 2 - Math.log( latMax - latMin ) / Math.LN10 ) );
 		lng = lng.toFixed( ~~( 2 - Math.log( lngMax - lngMin ) / Math.LN10 ) );
-
+		
 		return { lat: +lat, lng: +lng };
 	}
-
+	
 	/**
 	 * bounds
 	 * @description
@@ -144,28 +144,28 @@ class Geohash
 		if( geohash.length === 0 ) {
 			throw new Error( 'Invalid geohash' );
 		}
-
+		
 		geohash = geohash.toLowerCase();
-
+		
 		let
 			evenBit = true,
 			latMin  = -90,
 			latMax  = 90,
 			lngMin  = -180,
 			lngMax  = 180;
-
+		
 		for( let i = 0; i < geohash.length; i++ ) {
 			const
 				chr = geohash.charAt( i ),
 				idx = Geohash.BASE32.indexOf( chr );
-
+			
 			if( idx === -1 ) {
 				throw new Error( 'Invalid geohash' );
 			}
-
+			
 			for( let n = 4; n >= 0; n-- ) {
 				const bitN = idx >> n & 1;
-
+				
 				if( evenBit ) {
 					// longitude
 					const lngMid = ( lngMin + lngMax ) / 2;
@@ -175,17 +175,17 @@ class Geohash
 					const latMid = ( latMin + latMax ) / 2;
 					bitN === 1 ? latMin = latMid : latMax = latMid;
 				}
-
+				
 				evenBit = !evenBit;
 			}
 		}
-
+		
 		return {
 			sw: { lat: latMin, lng: lngMin },
 			ne: { lat: latMax, lng: lngMax }
 		};
 	}
-
+	
 	/**
 	 * Determines adjacent cell in given direction.
 	 *
@@ -198,13 +198,13 @@ class Geohash
 	{
 		geohash   = geohash.toLowerCase();
 		direction = direction.toLowerCase();
-
+		
 		if( geohash.length === 0 ) {
 			throw new Error( 'Invalid geohash' );
 		} else if( 'nsew'.indexOf( direction ) === -1 ) {
 			throw new Error( 'Invalid direction' );
 		}
-
+		
 		const
 			neighbour = {
 				n: [ 'p0r21436x8zb9dcf5h7kjnmqesgutwvy', 'bc01fg45238967deuvhjyznpkmstqrwx' ],
@@ -220,17 +220,17 @@ class Geohash
 			},
 			lastCh    = geohash.slice( -1 ),
 			type      = geohash.length % 2;
-
+		
 		let parent = geohash.slice( 0, -1 );
-
+		
 		if( border[ direction ][ type ].indexOf( lastCh ) !== -1 && parent !== '' ) {
 			parent = Geohash.adjacent( parent, direction );
 		}
-
+		
 		// append letter for direction to parent
 		return parent + Geohash.BASE32.charAt( neighbour[ direction ][ type ].indexOf( lastCh ) );
 	}
-
+	
 	/**
 	 * neighbors
 	 * Returns all 8 adjacent cells to specified geohash.
@@ -253,7 +253,40 @@ class Geohash
 			se: Geohash.adjacent( Geohash.adjacent( geohash, 's' ), 'e' )
 		};
 	}
-
+	
+	static decodeBBox( hash )
+	{
+		let
+			minLat = -90,
+			maxLat = 90,
+			minLng = -180,
+			maxLng = 180,
+			isLng  = true,
+			mid;
+		
+		let hashValue = 0;
+		for( let i = 0, l = hash.length; i < l; i++ ) {
+			const code = hash[ i ].toLowerCase();
+			hashValue  = Geohash.BASE32_DICT[ code ];
+			
+			for( let bits = 4; bits >= 0; bits-- ) {
+				const bit = ( hashValue >> bits ) & 1;
+				
+				if( isLng ) {
+					mid = ( maxLng + minLng ) / 2;
+					bit === 1 ? minLng = mid : maxLng = mid;
+				} else {
+					mid = ( maxLat + minLat ) / 2;
+					bit === 1 ? minLat = mid : maxLat = mid;
+				}
+				
+				isLng = !isLng;
+			}
+		}
+		
+		return [ minLng, minLat, maxLng, maxLat ];
+	}
+	
 	/**
 	 * sizeOf
 	 * Calculate the size of a given geohash
@@ -284,35 +317,42 @@ class Geohash
 		if( geohash.length === 0 ) {
 			throw new Error( 'Invalid geohash' );
 		}
-
+		
 		geohash = geohash.toLowerCase();
-
+		
 		const
 			precision         = geohash.length,
 			{ width, height } = Geohash.PRECISION[ precision ],
 			area              = width * height;
-
+		
 		return { geohash, precision, width, height, area };
 	}
-
+	
 	static geohashWithin( bbox, precision )
 	{
 		if( bbox.constructor.name !== 'BBox' ) {
 			bbox = new BBox( bbox );
 		}
-
+		
 		const
 			x1y1 = Geohash.encode( bbox.y1, bbox.x1 ),
 			x1y2 = Geohash.encode( bbox.y2, bbox.x1 );
-
+		
 		console.log( x1y1 );
 		console.log( x1y2 );
-
+		
 		return '';
 	}
 }
 
-Geohash.BASE32    = '0123456789bcdefghjkmnpqrstuvwxyz';
+Geohash.BASE32      = '0123456789bcdefghjkmnpqrstuvwxyz';
+Geohash.BASE32_DICT = {
+	0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7,
+	8: 8, 9: 9, b: 10, c: 11, d: 12, e: 13, f: 14, g: 15,
+	h: 16, j: 17, k: 18, m: 19, n: 20, p: 21, q: 22, r: 23,
+	s: 24, t: 25, u: 26, v: 27, w: 28, x: 29, y: 30, z: 31
+};
+
 Geohash.PRECISION = {
 	1: { width: 5000000, height: 5000000 },
 	2: { width: 1250000, height: 625000 },

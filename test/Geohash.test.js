@@ -17,7 +17,7 @@ describe( 'Geohash', () => {
 		hash = 'dqcjpxetzh6q';
 	
 	it( '[Geohash.base32] should return Geohash-specific Base32 map',
-		() => expect( Geohash.base32 ).to.eq( '0123456789bcdefghjkmnpqrstuvwxyz' )
+		() => expect( Geohash.BASE32 ).to.eq( '0123456789bcdefghjkmnpqrstuvwxyz' )
 	);
 	
 	it( '[Geohash.encode] should encode lat/lng precision 1',

@@ -1,5 +1,7 @@
 # @parellin/geohash
 
+[![NPM](https://nodei.co/npm/@parellin/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@parellin/lightmap)
+
 Geohash decode/encoder
 
 | Precision | Width       | Height      |
@@ -16,8 +18,6 @@ Geohash decode/encoder
 | 10        | `≤ 1.19m`   | `× 0.596m`  |
 | 11        | `≤ 149mm`   | `× 149mm`   |
 | 12        | `≤ 37.2mm`  | `× 18.6mm`  |
-
-[![NPM](https://nodei.co/npm/@parellin/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@parellin/lightmap)
 
 ### Installation
 
