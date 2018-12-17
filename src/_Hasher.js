@@ -6,7 +6,6 @@
 'use strict';
 
 const
-	Readable                   = require( 'stream' ).Readable,
 	geohash                    = require( 'ngeohash' ),
 	Polygon                    = require( './Polygon' ),
 	// turfExtent                 = require( 'turf-extent' ),
@@ -16,7 +15,6 @@ const
 	}                          = require( '@turf/helpers' ),
 	{ default: bbox }          = require( '@turf/bbox' ),
 	{ default: turfIntersect } = require( '@turf/intersect' ),
-	through2                   = require( 'through2' ),
 	geojsonArea                = require( 'geojson-area' );
 
 /**
@@ -121,6 +119,7 @@ class Hasher
 			} else if( this.hashMode === 'intersect' || this.hashMode === 'extent' ) {
 				rowHashes.push( columnHash );
 			}
+			
 			columnHash   = this.geohashNeighbor( columnHash, [ 0, 1 ], this.precision );
 			columnCenter = this.geohashDecode( columnHash, this.precision );
 		}
