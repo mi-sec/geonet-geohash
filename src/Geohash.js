@@ -343,6 +343,29 @@ class Geohash
 		
 		return '';
 	}
+	
+	static toGEOJSON( hash )
+	{
+		const bbox = Geohash.decodeBBox( hash );
+		
+		return {
+			type: 'Feature',
+			bbox,
+			properties: {},
+			geometry: {
+				type: 'Polygon',
+				coordinates: [
+					[
+						[ bbox[ 0 ], bbox[ 1 ] ],
+						[ bbox[ 2 ], bbox[ 1 ] ],
+						[ bbox[ 2 ], bbox[ 3 ] ],
+						[ bbox[ 0 ], bbox[ 3 ] ],
+						[ bbox[ 0 ], bbox[ 1 ] ]
+					]
+				]
+			}
+		};
+	}
 }
 
 Geohash.BASE32      = '0123456789bcdefghjkmnpqrstuvwxyz';

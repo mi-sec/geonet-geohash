@@ -17,27 +17,6 @@ const
 	{ default: turfIntersect } = require( '@turf/intersect' ),
 	geojsonArea                = require( 'geojson-area' );
 
-/**
- * utilizing point-in-poly but providing support for geojson polys and holes.
- */
-function inside( pt, poly ) {
-	if( poly.type !== 'Polygon' && poly.type !== 'MultiPolygon' ) {
-		return false;
-	}
-	
-	const shape = poly.type === 'Polygon' ? [ poly.coordinates ] : poly.coordinates;
-	let inside  = 0;
-	
-	shape.forEach(
-		_poly => _poly.forEach(
-			ring => !Polygon.pointInside( [ pt.longitude, pt.latitude ], ring ) || inside++
-		)
-	);
-	
-	return inside % 2;
-}
-
-
 /*
  * Hasher, extends Readable
  * a stream that will provide a readable list of hashes, row by row.
@@ -114,7 +93,7 @@ class Hasher
 			);
 		
 		while( columnHash !== westerly ) {
-			if( this.hashMode === 'inside' && inside( columnCenter, prepared ) ) {
+			if( this.hashMode === 'inside' && Hasher.inside( columnCenter, prepared ) ) {
 				rowHashes.push( columnHash );
 			} else if( this.hashMode === 'intersect' || this.hashMode === 'extent' ) {
 				rowHashes.push( columnHash );
@@ -246,6 +225,27 @@ class Hasher
 		} else {
 			return currentGeojson.geometry;
 		}
+	}
+	
+	/**
+	 * utilizing point-in-poly but providing support for geojson polys and holes.
+	 */
+	static inside( pt, poly )
+	{
+		if( poly.type !== 'Polygon' && poly.type !== 'MultiPolygon' ) {
+			return false;
+		}
+		
+		const shape = poly.type === 'Polygon' ? [ poly.coordinates ] : poly.coordinates;
+		let inside  = 0;
+		
+		shape.forEach(
+			_poly => _poly.forEach(
+				ring => !Polygon.pointInside( [ pt.longitude, pt.latitude ], ring ) || inside++
+			)
+		);
+		
+		return inside % 2;
 	}
 }
 

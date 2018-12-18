@@ -58,6 +58,8 @@ console.log( x.area() );
 
 // console.log( Geohash.sizeOf( 'dqcjpxetzh6q' ) );
 // console.log( Geohash.decodeBBox( 'dqcjpxetzh6q' ) );
+console.log( Geohash.decodeBBox( 'dqbvj3' ) );
+console.log( Geohash.decodeBBox( 'dqbvj3' ) );
 // console.log( Geohash.geohashWithin( x ) );
 
 const
