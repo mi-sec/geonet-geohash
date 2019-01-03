@@ -13,13 +13,13 @@ class BBox extends Vector4D
 	constructor( ...props )
 	{
 		super( ...props );
-
+		
 		this.x1 = this.x;
 		this.y1 = this.y;
 		this.x2 = this.z;
 		this.y2 = this.w;
 	}
-
+	
 	area()
 	{
 		const
@@ -32,15 +32,15 @@ class BBox extends Vector4D
 				Math.sin( dLon / 2 ) ** 2,
 			c    = 2 * Math.atan2( Math.sqrt( a ), Math.sqrt( 1 - a ) ),
 			d    = R * c;
-
+		
 		return d;
 	}
-
+	
 	toJSON()
 	{
-		return { x1: this.x, y1: this.w, z: this.z, w: this.w };
+		return { x1: this.x1, y1: this.y1, x2: this.x2, y2: this.y2 };
 	}
-
+	
 	static [ Symbol.hasInstance ]( instance )
 	{
 		return instance.constructor.name === 'BBox';

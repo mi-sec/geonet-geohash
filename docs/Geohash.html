@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_Geohash.js.html">src/Geohash.js</a>, <a href="src_Geohash.js.html#line14">line 14</a>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -271,7 +271,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_Geohash.js.html">src/Geohash.js</a>, <a href="src_Geohash.js.html#line197">line 197</a>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -440,7 +440,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_Geohash.js.html">src/Geohash.js</a>, <a href="src_Geohash.js.html#line142">line 142</a>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line142">line 142</a>
     </li></ul></dd>
     
 
@@ -611,7 +611,7 @@ to reasonable precision).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_Geohash.js.html">src/Geohash.js</a>, <a href="src_Geohash.js.html#line114">line 114</a>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line114">line 114</a>
     </li></ul></dd>
     
 
@@ -675,6 +675,159 @@ to reasonable precision).</p>
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>var latlng = Geohash.decode('u120fxw'); // latlng: { lat: 52.205, lng: 0.1188 }</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".decodeBBox"><span class="type-signature">(static) </span>decodeBBox<span class="signature">(hash)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>convert a geohash to bbox coordinates</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>geohash to convert to bbox</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line264">line 264</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
 
 
@@ -861,7 +1014,7 @@ evaluated precision.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_Geohash.js.html">src/Geohash.js</a>, <a href="src_Geohash.js.html#line30">line 30</a>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -1036,7 +1189,7 @@ Returns all 8 adjacent cells to specified geohash.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_Geohash.js.html">src/Geohash.js</a>, <a href="src_Geohash.js.html#line242">line 242</a>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line242">line 242</a>
     </li></ul></dd>
     
 
@@ -1095,6 +1248,328 @@ Returns all 8 adjacent cells to specified geohash.</p>
     
 
 
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".segmentPolygonToGeohash"><span class="type-signature">(static) </span>segmentPolygonToGeohash<span class="signature">(opts)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>slice a polygon into geohash blocks of specified precision</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>opts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>options for Geohash segmentation</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geojson</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Array></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>geojson input ([ [ [ lng, lat ], [ lng, lat ] ] ])</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>precision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>precision input (1-12)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hashMode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">'inside'</span>
+|
+
+<span class="param-type">'intersect'</span>
+|
+
+<span class="param-type">'extent'</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    inside
+                
+                </td>
+            
+
+            <td class="description last"><p>geohashes completely within a polygon,
+midpoints within a polygon, or covering the extent of that polygon</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line363">line 363</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>resulting geohashes covering a polygon</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>Geohash.segmentPolygonToGeohash( {
+		geojson: [ [
+			[ -122.344774, 47.702877 ],
+	 		[ -122.344609, 47.697807 ],
+			[ -122.349999, 47.697822 ],
+			[ -122.350051, 47.702893 ],
+			[ -122.344774, 47.702877 ]
+		] ],
+		precision: 6,
+		hashMode: 'intersect',
+		threshold: 0.01
+} );
+// [ 'c22zru', 'c22zrg' ]</code></pre>
 
 
 
@@ -1220,7 +1695,7 @@ Calculate the size of a given geohash
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_Geohash.js.html">src/Geohash.js</a>, <a href="src_Geohash.js.html#line315">line 315</a>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line322">line 322</a>
     </li></ul></dd>
     
 
@@ -1279,6 +1754,163 @@ Calculate the size of a given geohash
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id=".toGeoJSON"><span class="type-signature">(static) </span>toGeoJSON<span class="signature">(hash)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>convert geohash to GeoJSON</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>geohash to convert</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line386">line 386</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>geohash to geojson</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -1294,13 +1926,13 @@ Calculate the size of a given geohash
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Geohash.html">Geohash</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bbox">bbox</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#inside">inside</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#streamer">streamer</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Geohash.html">Geohash</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Dec 17 2018 05:54:09 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jan 03 2019 15:56:59 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

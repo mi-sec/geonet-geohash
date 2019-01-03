@@ -12,222 +12,262 @@ class Vector2D
 		this.x = +x;
 		this.y = +y;
 	}
-
+	
 	toString()
 	{
 		return `(${ this.x }, ${ this.y })`;
 	}
-
+	
 	toArray()
 	{
 		return [ this.x, this.y ];
 	}
-
+	
 	toJSON()
 	{
 		return { x: this.x, y: this.y };
 	}
-
+	
 	equals( vec )
 	{
 		return Vector2D.equals( this, vec );
 	}
-
+	
 	static equals( vec1, vec2 )
 	{
 		return vec1.x === vec2.x && vec1.y === vec2.y;
 	}
-
+	
 	add( vec )
 	{
 		this.x += vec.x;
 		this.y += vec.y;
 		return this;
 	}
-
+	
 	static add( vec1, vec2 )
 	{
 		return new Vector2D( vec1.x + vec2.x, vec1.y + vec2.y );
 	}
-
+	
 	subtract( vec )
 	{
 		this.x -= vec.x;
 		this.y -= vec.y;
 		return this;
 	}
-
+	
 	static subtract( vec1, vec2 )
 	{
 		return new Vector2D( vec1.x - vec2.x, vec1.y - vec2.y );
 	}
-
+	
 	multiply( vec )
 	{
 		this.x *= vec.x;
 		this.y *= vec.y;
 		return this;
 	}
-
+	
 	static multiply( vec1, vec2 )
 	{
 		return new Vector2D( vec1.x * vec2.x, vec1.y * vec2.y );
 	}
-
+	
 	divide( vec )
 	{
 		this.x /= vec.x;
 		this.y /= vec.y;
 		return this;
 	}
-
+	
 	static divide( vec1, vec2 )
 	{
 		return new Vector2D( vec1.x / vec2.x, vec1.y / vec2.y );
 	}
-
+	
 	multiplyScalar( n )
 	{
 		this.x *= n;
 		this.y *= n;
 		return this;
 	}
-
+	
 	static multiplyScalar( vec, n )
 	{
 		return new Vector2D( vec.x * n, vec.y * n );
 	}
-
+	
 	divideScalar( n )
 	{
 		this.x /= n;
 		this.y /= n;
 		return this;
 	}
-
+	
 	static divideScalar( vec, n )
 	{
 		return new Vector2D( vec.x / n, vec.y / n );
 	}
-
+	
 	magnitude()
 	{
 		return Vector2D.magnitude( this );
 	}
-
+	
 	static magnitude( vec )
 	{
 		return Math.sqrt( ( vec.x * vec.x ) + ( vec.y * vec.y ) );
 	}
-
+	
 	normalize()
 	{
 		return Vector2D.normalize( this );
 	}
-
+	
 	static normalize( vec )
 	{
 		return Vector2D.divideScalar( vec, Vector2D.magnitude( vec ) );
 	}
-
+	
 	length()
 	{
 		return Vector2D.length( this );
 	}
-
+	
 	static length( vec )
 	{
 		return Vector2D.magnitude( vec );
 	}
-
+	
 	lengthSquared()
 	{
 		return Vector2D.lengthSquared( this );
 	}
-
+	
 	static lengthSquared( vec )
 	{
 		return ( vec.x * vec.x ) + ( vec.y * vec.y );
 	}
-
+	
 	zero()
 	{
 		this.x = this.y = 0;
 		return this;
 	}
-
+	
 	static zero()
 	{
 		return new Vector2D( 0, 0 );
 	}
-
+	
 	static up()
 	{
 		return new Vector2D( 0, 1 );
 	}
-
+	
 	static right()
 	{
 		return new Vector2D( 1, 0 );
 	}
-
+	
 	static down()
 	{
 		return new Vector2D( 0, -1 );
 	}
-
+	
 	static left()
 	{
 		return new Vector2D( -1, 0 );
 	}
-
+	
+	static north()
+	{
+		return Vector2D.up();
+	}
+	
+	static northeast()
+	{
+		return new Vector2D( 1, 1 );
+	}
+	
+	static east()
+	{
+		return Vector2D.right();
+	}
+	
+	static southeast()
+	{
+		return new Vector2D( 1, -1 );
+	}
+	
+	static south()
+	{
+		return Vector2D.down();
+	}
+	
+	static southwest()
+	{
+		return new Vector2D( -1, -1 );
+	}
+	
+	static west()
+	{
+		return Vector2D.left();
+	}
+	
+	static northwest()
+	{
+		return new Vector2D( -1, 1 );
+	}
+	
 	dot( vec )
 	{
 		return Vector2D.dot( this, vec );
 	}
-
+	
 	static dot( vec1, vec2 )
 	{
 		return ( vec1.x * vec2.x ) + ( vec1.y * vec2.y );
 	}
-
+	
 	cross( vec )
 	{
 		return Vector2D.cross( this, vec );
 	}
-
+	
 	static cross( vec1, vec2 )
 	{
 		return ( vec1.x * vec2.x ) - ( vec1.y * vec2.y );
 	}
-
+	
 	reverse()
 	{
 		this.x = -this.x;
 		this.y = -this.y;
 		return this;
 	}
-
+	
 	static reverse( vec )
 	{
 		return new Vector2D( -vec.x, -vec.y );
 	}
-
+	
 	distance( vec )
 	{
 		return Vector2D.distance( this, vec );
 	}
-
+	
 	static distance( vec1, vec2 )
 	{
 		return Math.hypot( vec1.x - vec2.x, vec1.y - vec2.y );
 	}
-
+	
 	round( n )
 	{
 		return Vector2D.round( this, n );
 	}
-
+	
 	static round( vec, n )
 	{
 		n     = 10 ** ( n === 0 ? n : n || 6 );
@@ -235,31 +275,31 @@ class Vector2D
 		vec.y = ( ( 0.5 + ( vec.y * n ) ) << 0 ) / n;
 		return vec;
 	}
-
+	
 	rotateRadians( rads, round = 6 )
 	{
 		return Vector2D.rotateRadians( this, rads, round );
 	}
-
+	
 	static rotateRadians( vec, rads, round = 6 )
 	{
 		const [ cos, sin, x, y ] = [ Math.cos( rads ), Math.sin( rads ), vec.x, vec.y ];
-
+		
 		vec.x = cos * x - sin * y;
 		vec.y = sin * x + cos * y;
 		return Vector2D.round( vec, round );
 	}
-
+	
 	rotateDegrees( degs, round = 6 )
 	{
 		return this.rotateRadians( degs * Vector2D.DegToRad, round );
 	}
-
+	
 	static rotateDegrees( vec, degs, round = 6 )
 	{
 		return Vector2D.rotateRadians( degs * Vector2D.DegToRad, round );
 	}
-
+	
 	clone()
 	{
 		return new Vector2D( this.x, this.y );

@@ -6,67 +6,9 @@
 'use strict';
 
 const
-	Geohash  = require( '../index' ),
-	BBox     = require( '../src/BBox' ),
-	Vector4D = require( '../src/Vector4D' );
-
-/**
- * Lng = X
- * Lat = Y
- *
- * X1,Y2       X2,Y2
- *   |-----------|
- *   |           |
- *   |           |
- *   |-----------|
- * X1,Y1       X2,Y1
- *
- * -77.480264,38.848498,-77.453227,38.866812
- *
- * MIN_LNG = -77.480264
- * MIN_LAT = 38.848498
- *
- * MAX_LNG = -77.453227
- * MAX_LAT = 38.866812
- */
-
-const
-	bbox    = '-77.480264,38.848498,-77.453227,38.866812',
-	bboxMap = {
-		topLeft: {
-			lng: -77.480264,
-			lat: 38.866812
-		},
-		topRight: {
-			lng: -77.453227,
-			lat: 38.866812
-		},
-		bottomLeft: {
-			lng: -77.480264,
-			lat: 38.848498
-		},
-		bottomRight: {
-			lng: -77.453227,
-			lat: 38.848498
-		}
-	};
-
-
-const x = new BBox( bbox );
-
-console.log( x.area() );
-
-// console.log( Geohash.sizeOf( 'dqcjpxetzh6q' ) );
-// console.log( Geohash.decodeBBox( 'dqcjpxetzh6q' ) );
-console.log( Geohash.decodeBBox( 'dqbvj3' ) );
-console.log( Geohash.decodeBBox( 'dqbvj3' ) );
-// console.log( Geohash.geohashWithin( x ) );
-
-const
-	chai           = require( 'chai' ),
-	expect         = chai.expect,
-	geohashPolygon = require( '../src/_Hasher' );
-// geohashPolygon = require( '../../geohash-poly/index' );
+	chai   = require( 'chai' ),
+	expect = chai.expect,
+	Hasher = require( '../src/Hasher' );
 
 const
 	input = [ [
@@ -86,13 +28,14 @@ const
 	] ];
 
 describe( '@parellin/geohash', () => {
-	it( '[Geohash] should return Geohash inside a polygon',
+	it( '[Hasher] should return Geohash inside a polygon',
 		done => {
-			const hashes = geohashPolygon( {
-				coords: input,
+			const hashes = new Hasher( {
+				geojson: input,
 				precision: 7,
-				hashMode: 'inside'
-			} );
+				hashMode: 'inside',
+				threshold: 0.01
+			} ).calculate();
 			
 			expect( hashes ).to.deep.eq( [
 				'c22zrgg', 'c22zrgu', 'c22zrgv', 'c22zrgy', 'c22zrgz',
@@ -107,15 +50,39 @@ describe( '@parellin/geohash', () => {
 		}
 	);
 	
-	it( '[Geohash] should return Geohash intersecting a polygon',
+	it( '[Hasher] should return Geohash intersecting a polygon',
 		done => {
-			// return done();
-			const hashes = geohashPolygon( {
-				coords: input,
+			const hashes = new Hasher( {
+				geojson: input,
 				precision: 7,
 				hashMode: 'intersect',
-				threshold: 0.0
-			} );
+				threshold: 0.01
+			} ).calculate();
+			
+			expect( hashes ).to.deep.eq( [
+				'c22zru5', 'c22zruh', 'c22zruj', 'c22zrun', 'c22zrup',
+				'c23p2h0', 'c23p2h1', 'c22zrgg', 'c22zrgu', 'c22zrgv',
+				'c22zrgy', 'c22zrgz', 'c23p25b', 'c23p25c', 'c23p25f',
+				'c22zrge', 'c22zrgs', 'c22zrgt', 'c22zrgw', 'c22zrgx',
+				'c23p258', 'c23p259', 'c23p25d', 'c22zrg7', 'c22zrgk',
+				'c22zrgm', 'c22zrgq', 'c22zrgr', 'c23p252', 'c23p253',
+				'c23p256', 'c22zrg5', 'c22zrgh', 'c22zrgj', 'c22zrgn',
+				'c22zrgp', 'c23p250', 'c23p251', 'c23p254', 'c22zrfz',
+				'c23p24b', 'c23p24c'
+			] );
+			
+			done();
+		}
+	);
+	
+	it( '[Hasher] should return Geohash extent of a polygon',
+		done => {
+			const hashes = new Hasher( {
+				geojson: input,
+				precision: 7,
+				hashMode: 'extent',
+				threshold: 0.01
+			} ).calculate();
 			
 			expect( hashes ).to.deep.eq( [
 				'c22zru5', 'c22zruh', 'c22zruj', 'c22zrun', 'c22zrup',

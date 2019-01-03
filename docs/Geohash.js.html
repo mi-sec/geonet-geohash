@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/Geohash.js</title>
+    <title>JSDoc: Source: Geohash.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: src/Geohash.js</h1>
+    <h1 class="page-title">Source: Geohash.js</h1>
 
     
 
@@ -34,7 +34,7 @@
 'use strict';
 
 const
-	BBox = require( './BBox' );
+	Hasher   = require( './Hasher' );
 
 /**
  * Geohash
@@ -282,6 +282,13 @@ class Geohash
 		};
 	}
 	
+	/**
+	 * decodeBBox
+	 * @description
+	 * convert a geohash to bbox coordinates
+	 * @param {string} hash - geohash to convert to bbox
+	 * @returns {number[]}
+	 */
 	static decodeBBox( hash )
 	{
 		let
@@ -356,20 +363,75 @@ class Geohash
 		return { geohash, precision, width, height, area };
 	}
 	
-	static geohashWithin( bbox, precision )
+	/**
+	 * segmentPolygonToGeohash
+	 * @description
+	 * slice a polygon into geohash blocks of specified precision
+	 * @param {Object} opts - options for Geohash segmentation
+	 * @param {Array[]} opts.geojson - geojson input ([ [ [ lng, lat ], [ lng, lat ] ] ])
+	 * @param {number} opts.precision - precision input (1-12)
+	 * @param {('inside'|'intersect'|'extent')} [opts.hashMode=inside] - geohashes completely within a polygon,
+	 * midpoints within a polygon, or covering the extent of that polygon
+	 * @returns {Array} - resulting geohashes covering a polygon
+	 * @example
+	 * Geohash.segmentPolygonToGeohash( {
+	 * 		geojson: [ [
+	 * 			[ -122.344774, 47.702877 ],
+	 *	 		[ -122.344609, 47.697807 ],
+	 * 			[ -122.349999, 47.697822 ],
+	 * 			[ -122.350051, 47.702893 ],
+	 * 			[ -122.344774, 47.702877 ]
+	 * 		] ],
+	 *		precision: 6,
+	 *		hashMode: 'intersect',
+	 *		threshold: 0.01
+	 * } );
+	 * // [ 'c22zru', 'c22zrg' ]
+	 */
+	static segmentPolygonToGeohash( opts )
 	{
-		if( bbox.constructor.name !== 'BBox' ) {
-			bbox = new BBox( bbox );
-		}
+		opts.rowMode = true;
 		
-		const
-			x1y1 = Geohash.encode( bbox.y1, bbox.x1 ),
-			x1y2 = Geohash.encode( bbox.y2, bbox.x1 );
+		const hasher = new Hasher( {
+			geojson: opts.geojson,
+			precision: opts.precision,
+			rowMode: !!opts.rowMode,
+			integerMode: !!opts.integerMode,
+			hashMode: opts.hashMode,
+			threshold: opts.threshold || 0.01
+		} );
 		
-		console.log( x1y1 );
-		console.log( x1y2 );
+		return hasher.calculate();
+	}
+	
+	/**
+	 * toGeoJSON
+	 * @description
+	 * convert geohash to GeoJSON
+	 * @param {string} hash - geohash to convert
+	 * @returns {*} geohash to geojson
+	 */
+	static toGeoJSON( hash )
+	{
+		const bbox = Geohash.decodeBBox( hash );
 		
-		return '';
+		return {
+			type: 'Feature',
+			bbox,
+			properties: {},
+			geometry: {
+				type: 'Polygon',
+				coordinates: [
+					[
+						[ bbox[ 0 ], bbox[ 1 ] ],
+						[ bbox[ 2 ], bbox[ 1 ] ],
+						[ bbox[ 2 ], bbox[ 3 ] ],
+						[ bbox[ 0 ], bbox[ 3 ] ],
+						[ bbox[ 0 ], bbox[ 1 ] ]
+					]
+				]
+			}
+		};
 	}
 }
 
@@ -407,13 +469,13 @@ module.exports = Geohash;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Geohash.html">Geohash</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bbox">bbox</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#inside">inside</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#streamer">streamer</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Geohash.html">Geohash</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Dec 17 2018 05:54:09 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jan 03 2019 15:56:59 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

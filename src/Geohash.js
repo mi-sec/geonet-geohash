@@ -6,7 +6,7 @@
 'use strict';
 
 const
-	BBox = require( './BBox' );
+	Hasher   = require( './Hasher' );
 
 /**
  * Geohash
@@ -254,6 +254,13 @@ class Geohash
 		};
 	}
 	
+	/**
+	 * decodeBBox
+	 * @description
+	 * convert a geohash to bbox coordinates
+	 * @param {string} hash - geohash to convert to bbox
+	 * @returns {number[]}
+	 */
 	static decodeBBox( hash )
 	{
 		let
@@ -328,23 +335,55 @@ class Geohash
 		return { geohash, precision, width, height, area };
 	}
 	
-	static geohashWithin( bbox, precision )
+	/**
+	 * segmentPolygonToGeohash
+	 * @description
+	 * slice a polygon into geohash blocks of specified precision
+	 * @param {Object} opts - options for Geohash segmentation
+	 * @param {Array[]} opts.geojson - geojson input ([ [ [ lng, lat ], [ lng, lat ] ] ])
+	 * @param {number} opts.precision - precision input (1-12)
+	 * @param {('inside'|'intersect'|'extent')} [opts.hashMode=inside] - geohashes completely within a polygon,
+	 * midpoints within a polygon, or covering the extent of that polygon
+	 * @returns {Array} - resulting geohashes covering a polygon
+	 * @example
+	 * Geohash.segmentPolygonToGeohash( {
+	 * 		geojson: [ [
+	 * 			[ -122.344774, 47.702877 ],
+	 *	 		[ -122.344609, 47.697807 ],
+	 * 			[ -122.349999, 47.697822 ],
+	 * 			[ -122.350051, 47.702893 ],
+	 * 			[ -122.344774, 47.702877 ]
+	 * 		] ],
+	 *		precision: 6,
+	 *		hashMode: 'intersect',
+	 *		threshold: 0.01
+	 * } );
+	 * // [ 'c22zru', 'c22zrg' ]
+	 */
+	static segmentPolygonToGeohash( opts )
 	{
-		if( bbox.constructor.name !== 'BBox' ) {
-			bbox = new BBox( bbox );
-		}
+		opts.rowMode = true;
 		
-		const
-			x1y1 = Geohash.encode( bbox.y1, bbox.x1 ),
-			x1y2 = Geohash.encode( bbox.y2, bbox.x1 );
+		const hasher = new Hasher( {
+			geojson: opts.geojson,
+			precision: opts.precision,
+			rowMode: !!opts.rowMode,
+			integerMode: !!opts.integerMode,
+			hashMode: opts.hashMode,
+			threshold: opts.threshold || 0.01
+		} );
 		
-		console.log( x1y1 );
-		console.log( x1y2 );
-		
-		return '';
+		return hasher.calculate();
 	}
 	
-	static toGEOJSON( hash )
+	/**
+	 * toGeoJSON
+	 * @description
+	 * convert geohash to GeoJSON
+	 * @param {string} hash - geohash to convert
+	 * @returns {*} geohash to geojson
+	 */
+	static toGeoJSON( hash )
 	{
 		const bbox = Geohash.decodeBBox( hash );
 		
