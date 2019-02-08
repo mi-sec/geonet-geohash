@@ -9,7 +9,7 @@
  * inside
  * @description
  * utilizing point-in-poly but providing support for geojson polys and holes.
- * @param {Array} [ x, y ]- lng, lat point
+ * @param {Array} [ x, y ] - lng, lat point
  * @param {geojson} geometry - polygon to check against
  * @returns {*} - if the point resides within the polygon
  */

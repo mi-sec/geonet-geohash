@@ -6,7 +6,6 @@
 'use strict';
 
 const
-	Vector2D       = require( './Vector2D' ),
 	Hasher         = require( './Hasher' ),
 	BASE32         = '0123456789bcdefghjkmnpqrstuvwxyz',
 	BASE32_DICT    = {
@@ -305,8 +304,6 @@ function geohashToBBox( hash ) {
 }
 
 function determineDirection( [ x, y ] ) {
-	console.log( x, y );
-	
 	if( x === 0 && y === 0 ) {
 		return 'c';
 	} else if( !( x ^ y ) ) {

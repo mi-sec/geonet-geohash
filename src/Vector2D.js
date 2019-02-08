@@ -304,6 +304,24 @@ class Vector2D
 	{
 		return new Vector2D( this.x, this.y );
 	}
+	
+	* [ Symbol.iterator ]()
+	{
+		const arr = this.toArray();
+		yield arr[ 0 ];
+		yield arr[ 1 ];
+	}
+	
+	[ Symbol.toPrimitive ]( hint )
+	{
+		if( hint === 'number' ) {
+			return this.x + this.y;
+		} else if( hint === 'string' ) {
+			return this.toString();
+		} else {
+			return this;
+		}
+	}
 }
 
 Vector2D.DegToRad = Math.PI / 180;
