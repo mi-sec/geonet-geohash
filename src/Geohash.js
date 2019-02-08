@@ -6,7 +6,6 @@
 'use strict';
 
 const
-	Hasher         = require( './Hasher' ),
 	BASE32         = '0123456789bcdefghjkmnpqrstuvwxyz',
 	BASE32_DICT    = {
 		0: 0x0, 1: 0x1, 2: 0x2, 3: 0x3, 4: 0x4, 5: 0x5, 6: 0x6, 7: 0x7,
@@ -41,33 +40,56 @@ const
 		w: [ '0145hjnp', '028b' ]
 	},
 	ENCODE_AUTO    = -1,
-	MIN_LAT        = -90,
-	MAX_LAT        = 90,
 	MIN_LNG        = -180,
-	MAX_LNG        = 180;
+	MIN_LAT        = -90,
+	MAX_LNG        = 180,
+	MAX_LAT        = 90;
 
 /**
  * Significant Figure Hash Length
  *
- * This is a quick and dirty lookup to figure out how long our hash
- * should be in order to guarantee a certain amount of trailing
- * significant figures. This was calculated by determining the error:
- * 45/2^(n-1) where n is the number of bits for a latitude or
- * longitude. Key is # of desired sig figs, value is minimum length of
- * the geohash.
+ * This is a quick and dirty lookup to figure out how long our hash should be in order to guarantee a certain amount
+ * of trailing significant figures.
+ * This was calculated by determining the error: 45/2^(n-1) where n is the number of bits for a latitude or longitude.
+ * Key is number of desired sig figs, value is minimum length of the geohash.
  * @type Array
  */
 const
 	SIGFIG_HASH_LENGTH = [ 0, 5, 7, 8, 11, 12, 13, 15, 16, 17, 18 ];
 
 /**
- * isValidLongitude
+ * longitudeClamp
+ *
  * Determines if longitude is in the realm of possibility
- * If it's not, return the MIN_LNG or MAX_LNG accordingly
+ * If it's not, clamp the longitude value to the MIN/MAX
  * @param {number} lng - longitude
  * @returns {number} - longitude
  */
-function isValidLongitude( lng ) {
+function longitudeClamp( lng ) {
+	return Math.min( Math.max( MIN_LNG, lng ), MAX_LNG );
+}
+
+/**
+ * latitudeClamp
+ *
+ * Determines if latitude is in the realm of possibility
+ * If it's not, clamp the latitude value to the MIN/MAX
+ * @param {number} lng - longitude
+ * @returns {number} - longitude
+ */
+function latitudeClamp( lng ) {
+	return Math.min( Math.max( MIN_LAT, lng ), MAX_LAT );
+}
+
+/**
+ * longitudeClampRelative
+ *
+ * Determines if longitude is in the realm of possibility
+ * If it's not, return the longitude position relative to the amount offset
+ * @param {number} lng - longitude
+ * @returns {number} - longitude
+ */
+function longitudeClampRelative( lng ) {
 	return lng > MAX_LNG ?
 		MIN_LNG + lng % MAX_LNG :
 		lng < MIN_LNG ?
@@ -76,17 +98,18 @@ function isValidLongitude( lng ) {
 }
 
 /**
- * isValidLatitude
+ * latitudeClampRelative
+ *
  * Determines if latitude is in the realm of possibility
- * If it's not, return the MIN_LAT or MAX_LAT accordingly
+ * If it's not, return the latitude position relative to the amount offset
  * @param {number} lat - latitude
  * @returns {number} - latitude
  */
-function isValidLatitude( lat ) {
+function latitudeClampRelative( lat ) {
 	return lat > MAX_LAT ?
-		MAX_LAT :
+		MIN_LAT + lat % MAX_LAT :
 		lat < MIN_LAT ?
-			MIN_LAT :
+			MAX_LAT + lat % MAX_LAT :
 			lat;
 }
 
@@ -97,33 +120,18 @@ function isValidLatitude( lat ) {
  *
  * @param {number} lng - longitude
  * @param {number} lat - latitude
- * @param {number?} precision - precision override
+ * @param {number?} [precision=-1] - precision override
  * @returns {number} - precision estimate
  */
 function determinePrecision( lng, lat, precision = -1 ) {
 	if( precision === ENCODE_AUTO ) {
 		if( lng !== +lng || lat !== +lat ) {
-			throw new Error( 'string notation required for auto precision.' );
+			throw new Error( 'number notation required for auto precision.' );
 		}
 		
-		if( ~~lat === lat && ~~lng === lng ) {
-			precision = 0;
-		} else {
-			const
-				sigFigs = Math.max(
-					( '' + ( lat % 1 ) ).length,
-					( '' + ( lng % 1 ) ).length
-				);
-			
-			precision = SIGFIG_HASH_LENGTH[ sigFigs ];
-		}
-	}
-	
-	return precision;
-}
-
-function _experimentalPrecisionEstimate( lng, lat, precision ) {
-	if( !precision ) {
+		lng = longitudeClampRelative( lng );
+		lat = latitudeClampRelative( lat );
+		
 		if( ~~lat === lat && ~~lng === lng ) {
 			precision = 0;
 		} else {
@@ -136,7 +144,7 @@ function _experimentalPrecisionEstimate( lng, lat, precision ) {
 		}
 	}
 	
-	return precision;
+	return ~~precision;
 }
 
 /**
@@ -144,14 +152,14 @@ function _experimentalPrecisionEstimate( lng, lat, precision ) {
  * Encodes latitude/longitude to geohash, either to specified precision or to automatically
  * evaluated precision.
  *
- * @param   {number} lat - Latitude in degrees.
  * @param   {number} lng - Longitude in degrees.
+ * @param   {number} lat - Latitude in degrees.
  * @param   {number} [precision] - Number of characters in resulting geohash.
  * @returns {string} Geohash of supplied latitude/longitude.
  * @throws  Invalid geohash.
  *
  * @example
- *     var geohash = Geohash.encode(52.205, 0.119, 7); // geohash: 'u120fxw'
+ *     const geohash = Geohash.encode(52.205, 0.119, 7); // geohash: 'u120fxw'
  */
 function encode( lng, lat, precision = ENCODE_AUTO ) {
 	precision = determinePrecision( lng, lat, precision );
@@ -171,10 +179,10 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 		hash    = 0, // index into BASE32 map
 		bit     = 0, // each char holds 5 bits
 		evenBit = true,
-		latMin  = MIN_LAT,
 		lngMin  = MIN_LNG,
-		latMax  = MAX_LAT,
+		latMin  = MIN_LAT,
 		lngMax  = MAX_LNG,
+		latMax  = MAX_LAT,
 		mid     = 0;
 	
 	while( geohash.length < precision ) {
@@ -223,7 +231,7 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
  * @throws  Invalid geohash.
  *
  * @example
- *     var latlng = decode('u120fxw'); // latlng: { lat: 52.205, lng: 0.1188 }
+ *     const latlng = decode('u120fxw'); // latlng: { lat: 52.205, lng: 0.1188 }
  */
 function decode( geohash, calculateErrorOffset = false ) {
 	const
@@ -250,10 +258,6 @@ function decode( geohash, calculateErrorOffset = false ) {
 	}
 }
 
-// TODO::: ensure the accuracy of decode - should be midpoint of decodeBBox
-// console.log( decode( 'u120fxw' ) );
-// console.log( decodeBBox( 'u120fxw' ) );
-
 /**
  * geohashToBBox
  * @description
@@ -269,10 +273,10 @@ function geohashToBBox( hash ) {
 	
 	let
 		evenBit = true,
-		latMin  = MIN_LAT,
 		lngMin  = MIN_LNG,
-		latMax  = MAX_LAT,
-		lngMax  = MAX_LNG;
+		latMin  = MIN_LAT,
+		lngMax  = MAX_LNG,
+		latMax  = MAX_LAT;
 	
 	for( let i = 0; i < hash.length; i++ ) {
 		const
@@ -356,7 +360,7 @@ function neighbor( geohash, direction ) {
  *
  * @param   {string} geohash - Geohash neighbors are required of.
  * @param   {boolean} asObject - to return as an object or array
- * @returns {{c,n,ne,e,se,s,sw,w,nw: string}|array} - surrounding geohashes
+ * @returns {{c,n,ne,e,se,s,sw,w,nw}|array} - surrounding geohashes
  * @throws  Invalid geohash.
  */
 function neighbors( geohash, asObject = false ) {
@@ -417,56 +421,18 @@ function sizeOf( geohash ) {
 }
 
 /**
- * segmentPolygonToGeohash
- * @description
- * slice a polygon into geohash blocks of specified precision
- * @param {Object} opts - options for Geohash segmentation
- * @param {Array[]} opts.geojson - geojson input ([ [ [ lng, lat ], [ lng, lat ] ] ])
- * @param {number} opts.precision - precision input (1-12)
- * @param {('inside'|'intersect'|'extent')} [opts.hashMode=inside] - geohashes completely within a polygon,
- * midpoints within a polygon, or covering the extent of that polygon
- * @returns {Array} - resulting geohashes covering a polygon
- * @example
- * segmentPolygonToGeohash( {
- * 		geojson: [ [
- * 			[ -122.344774, 47.702877 ],
- *	 		[ -122.344609, 47.697807 ],
- * 			[ -122.349999, 47.697822 ],
- * 			[ -122.350051, 47.702893 ],
- * 			[ -122.344774, 47.702877 ]
- * 		] ],
- *		precision: 6,
- *		hashMode: 'intersect',
- *		threshold: 0.01
- * } );
- * // [ 'c22zru', 'c22zrg' ]
- */
-function segmentPolygonToGeohash( opts ) {
-	opts.rowMode = true;
-	
-	const hasher = new Hasher( {
-		geojson: opts.geojson,
-		precision: opts.precision,
-		rowMode: !!opts.rowMode,
-		integerMode: !!opts.integerMode,
-		hashMode: opts.hashMode,
-		threshold: opts.threshold || 0.01
-	} );
-	
-	return hasher.calculate();
-}
-
-/**
  * getBBoxStartingPoint
  *
- * Beginning operations for generating a geohash bbox
+ * Beginning operations for generating a geohash bbox.
+ * Get the geohash for the southwest corner of a bbox and how many hash steps there are to the northeast corner.
  *
- * @param {number} minLng
- * @param {number} minLat
- * @param {number} maxLng
- * @param {number} maxLat
- * @param {number} precision
+ * @param {number} minLng - minimum longitude
+ * @param {number} minLat - minimum latitude
+ * @param {number} maxLng - maximum longitude
+ * @param {number} maxLat - maximum latitude
+ * @param {number} precision - geohash precision
  * @returns {{hashSouthWest: string, lngStep: number, latStep: number}}
+ * southwest hash and how many lng/lat steps to the northeast hash
  */
 function getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision = 7 ) {
 	const
@@ -488,9 +454,9 @@ function getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision = 7 ) {
 }
 
 /**
- * Bounding Boxes
+ * geohashesWithinBBox
  *
- * Return all the geohashs between minLat, minLng, maxLat, maxLng in precision
+ * Return all the geohashes between minLng, minLat, maxLng, maxLat at the specified precision
  *
  * @param {number} minLng - bbox min longitude
  * @param {number} minLat - bbox min latitude
@@ -521,6 +487,26 @@ function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = 7 ) {
 	}
 	
 	return hashList;
+}
+
+/**
+ * geohashesWithinBBoxToGeoJSON
+ *
+ * Return GeoJSON FeatureCollection of all geohashes between minLng, minLat, maxLng, maxLat at the specified precision
+ *
+ * @param {number} minLng - bbox min longitude
+ * @param {number} minLat - bbox min latitude
+ * @param {number} maxLng - bbox max longitude
+ * @param {number} maxLat - bbox max latitude
+ * @param {number} precision - geohash precision
+ * @returns {{type: string,features: {object[]}}}
+ * GeoJSON of geohashes within a bbox
+ */
+function geohashesWithinBBoxToGeoJSON( minLng, minLat, maxLng, maxLat, precision = 7 ) {
+	return {
+		type: 'FeatureCollection',
+		features: geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision ).map( toGeoJSON )
+	};
 }
 
 /**
@@ -560,20 +546,23 @@ module.exports = {
 	BORDER_CODEX,
 	SIGFIG_HASH_LENGTH,
 	ENCODE_AUTO,
-	MIN_LAT,
-	MAX_LAT,
 	MIN_LNG,
+	MIN_LAT,
 	MAX_LNG,
-	isValidLongitude,
-	isValidLatitude,
+	MAX_LAT,
+	longitudeClamp,
+	latitudeClamp,
+	longitudeClampRelative,
+	latitudeClampRelative,
+	determinePrecision,
 	encode,
 	decode,
 	neighbor,
 	neighbors,
 	geohashToBBox,
 	sizeOf,
-	segmentPolygonToGeohash,
 	getBBoxStartingPoint,
 	geohashesWithinBBox,
+	geohashesWithinBBoxToGeoJSON,
 	toGeoJSON
 };

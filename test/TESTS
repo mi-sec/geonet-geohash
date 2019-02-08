@@ -28,6 +28,26 @@ done();
 
 
 
+it( '[Geohash.segmentPolygonToGeohash] should get geohashes intersecting a polygon',
+		() => {
+			const
+				expected = [ 'c22zru', 'c22zrg' ],
+				actual   = Geohash.segmentPolygonToGeohash( {
+					geojson: [ [
+						[ -122.344774, 47.702877 ],
+						[ -122.344609, 47.697807 ],
+						[ -122.349999, 47.697822 ],
+						[ -122.350051, 47.702893 ],
+						[ -122.344774, 47.702877 ]
+					] ],
+					precision: 6,
+					hashMode: 'intersect',
+					threshold: 0.01
+				} );
+
+			expect( actual ).to.deep.eq( expected );
+		}
+	);
 
 
 const { default: bbox }        = require( '@turf/bbox' );

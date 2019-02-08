@@ -12,24 +12,20 @@ const
 	expect           = chai.expect;
 
 const
-	{ featureCollection } = require( '@turf/helpers' ),
-	{
-		geohashesWithinBBox,
-		toGeoJSON
-	}                     = require( '../index' );
+	{ geohashesWithinBBoxToGeoJSON } = require( '../index' );
 
-describe( '@parellin/geohash - geohashToGeoJSONFeatureCollection', () => {
-	it( '[geohashesWithinBBox] should return Geohashes inside a bbox',
+describe( '[geohash.geohashesWithinBBoxToGeoJSON]', () => {
+	it( 'should return GeoJSON of geohashes within a bbox',
 		done => {
 			const
 				result = readFileSync(
-					join( __dirname, './geohashToGeoJSONFeatureCollection.test.result.json' ),
+					join( __dirname, './geohashesWithinBBoxToGeoJSON.test.results.json' ),
 					'utf8'
 				),
 				extent = [ -158.53271484375, 22.169601410638865, -157.69500732421875, 22.740723091194727 ],
-				tested = geohashesWithinBBox( ...extent, 5 ).map( toGeoJSON );
+				tested = geohashesWithinBBoxToGeoJSON( ...extent, 5 );
 			
-			expect( featureCollection( tested ) ).to.deep.eq( JSON.parse( result ) );
+			expect( tested ).to.deep.eq( JSON.parse( result ) );
 			
 			done();
 		}

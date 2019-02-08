@@ -13,10 +13,10 @@ const
 
 const { geohashesWithinBBox } = require( '../index' );
 
-describe( '@parellin/geohash - geohashesWithinBBox', () => {
-	it( '[geohashesWithinBBox] should return Geohashes inside a bbox',
+describe( '[geohash.geohashesWithinBBox]', () => {
+	it( 'should return geohashes within a bbox',
 		done => {
-			let result = readFileSync( join( __dirname, './geohashesWithinBBox.test.result.json' ), 'utf8' );
+			let result = readFileSync( join( __dirname, './geohashesWithinBBox.test.results.json' ), 'utf8' );
 			result     = JSON.parse( result );
 			
 			const
