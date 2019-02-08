@@ -91,7 +91,8 @@ class Hasher
 			);
 		
 		while( columnHash !== westerly ) {
-			if( this.hashMode === 'inside' && Hasher.inside( columnCenter, prepared ) ) {
+			console.log( columnCenter );
+			if( this.hashMode === 'inside' && pointInside( columnCenter, prepared ) ) {
 				rowHashes.push( columnHash );
 			} else if( this.hashMode === 'intersect' || this.hashMode === 'extent' ) {
 				rowHashes.push( columnHash );
@@ -235,6 +236,7 @@ class Hasher
 	 */
 	static inside( pt, poly )
 	{
+		console.log( 'inside' );
 		if( poly.type !== 'Polygon' && poly.type !== 'MultiPolygon' ) {
 			return false;
 		}
