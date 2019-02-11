@@ -231,7 +231,7 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
  * @throws  Invalid geohash.
  *
  * @example
- *     const latlng = decode('u120fxw'); // latlng: { lat: 52.205, lng: 0.1188 }
+ *     const latlng = decode( 'u120fxw' ); // latlng: { lat: 52.205, lng: 0.1188 }
  */
 function decode( geohash, calculateErrorOffset = false ) {
 	const

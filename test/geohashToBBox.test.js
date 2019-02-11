@@ -5,20 +5,20 @@
  *******************************************************************************************************/
 'use strict';
 
-const { point, featureCollection } = require( '@turf/helpers' );
-const { default: midpoint }        = require( '@turf/midpoint' );
-const { default: bbox }            = require( '@turf/bbox' );
-const { default: bboxPolygon }     = require( '@turf/bbox-polygon' );
+const
+	chai   = require( 'chai' ),
+	expect = chai.expect;
 
-// u120fxw
-// { lng: 0.1188, lat: 52.205 }
+const
+	{ geohashToBBox } = require( '../index' );
 
-var point1 = point( [ 0.11810302734375, 52.20428466796875 ] );
-var point2 = point( [ 0.119476318359375, 52.205657958984375 ] );
-
-
-const x = [];
-x.push( midpoint( point1, point2 ) );
-x.push( bboxPolygon( [ 0.11810302734375, 52.20428466796875, 0.119476318359375, 52.205657958984375 ] ) );
-
-console.log( featureCollection( x ) );
+describe( '[geohash.geohashToBBox]', () => {
+	it( 'should convert geohash to bounding box of appropriate hash size and location',
+		() => expect( geohashToBBox( 'u120fxw' ) ).to.deep.eq( [
+			0.11810302734375,
+			52.20428466796875,
+			0.119476318359375,
+			52.205657958984375
+		] )
+	);
+} );
