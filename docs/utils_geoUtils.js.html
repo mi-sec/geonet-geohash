@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Vector4D.js</title>
+    <title>JSDoc: Source: utils/geoUtils.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Vector4D.js</h1>
+    <h1 class="page-title">Source: utils/geoUtils.js</h1>
 
     
 
@@ -27,117 +27,64 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: Vector4D.js
+ * File: geoUtils.js
  * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Dec-2018
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 03-Jan-2019
  *******************************************************************************************************/
 'use strict';
 
-const
-	{
-		isString,
-		isNumber,
-		isArray
-	} = require( './utils/utilities' );
-
-class Vector4D
-{
-	constructor( x, y, z, w )
-	{
-		if( isString( x ) ) {
-			x = Vector4D.matchString( x );
-		}
-
-		if( isArray( x ) ) {
-			this.x = +x[ 0 ];
-			this.y = +x[ 1 ];
-			this.z = +x[ 2 ];
-			this.w = +x[ 3 ];
-		} else {
-			this.x = +x;
-			this.y = +y;
-			this.z = +z;
-			this.w = +w;
-		}
-
-		if( !isNumber( this.x, this.y, this.z, this.w ) ) {
-			throw new Error( 'Argument Error - Invalid Vector4D arguments' );
+/**
+ * inside
+ * @description
+ * utilizing point-in-poly but providing support for geojson polys and holes.
+ * @param {Array} [ x, y ] - lng, lat point
+ * @param {geojson} geometry - polygon to check against
+ * @returns {*} - if the point resides within the polygon
+ */
+function pointInside( [ x, y ], geometry ) {
+	if( geometry.type !== 'Polygon' &amp;&amp; geometry.type !== 'MultiPolygon' ) {
+		return false;
+	}
+	
+	const shape = geometry.type === 'Polygon' ? [ geometry.coordinates ] : geometry.coordinates;
+	let inside  = 0;
+	
+	for( let i = 0; i &lt; shape.length; i++ ) {
+		for( let j = 0; j &lt; shape[ i ].length; j++ ) {
+			if( pointWithinPolyCoords( [ x, y ], shape[ i ][ j ] ) ) {
+				inside++;
+			}
 		}
 	}
-
-	static matchString( str )
-	{
-		const [ x = 0, y = 0, z = 0, w = 0 ] = str.match( /-?\d*\.?\d+/g );
-		return [ +x, +y, +z, +w ];
-	}
-
-	equals( vec )
-	{
-		return Vector4D.equals( this, vec );
-	}
-
-	static equals( vec1, vec2 )
-	{
-		return vec1.x === vec2.x &amp;&amp; vec1.y === vec2.y &amp;&amp; vec1.z === vec2.z &amp;&amp; vec1.w === vec2.w;
-	}
-
-	area()
-	{
-		return ( this.x - this.z ) * ( this.y - this.w );
-	}
-
-	toArray()
-	{
-		return [ this.x, this.y, this.z, this.w ];
-	}
-
-	toString()
-	{
-		return `(${ this.x }, ${ this.y }, ${ this.z }, ${ this.w })`;
-	}
-
-	toJSON()
-	{
-		return { x: this.x, y: this.y, z: this.z, w: this.w };
-	}
-
-	/**
-	 * [ Symbol.toPrimitive ]
-	 * @description
-	 * symbol that specifies a function valued property that is called to convert an object to a primitive value
-	 * @param {*} n - hint
-	 * @return {*} - hint handler
-	 */
-	[ Symbol.toPrimitive ]( n )
-	{
-		if( n === 'string' ) {
-			return this.toString();
-		} else if( n === 'number' ) {
-			return +( this.x + this.y + this.z + this.w ) / 4;
-		} else if( n === 'boolean' ) {
-			return !!this;
-		} else {
-			return this.toString();
-		}
-	}
-
-	get [ Symbol.toStringTag ]()
-	{
-		return this.constructor.name;
-	}
-
-	static get [ Symbol.species ]()
-	{
-		return Array;
-	}
-
-	static [ Symbol.hasInstance ]( instance )
-	{
-		return instance.constructor.name === 'Vector4D';
-	}
+	
+	return inside % 2;
 }
 
-module.exports = Vector4D;
+
+function pointWithinPolyCoords( [ x, y ], coords ) {
+	let inside = false;
+	for( let i = 0, j = coords.length - 1; i &lt; coords.length; j = i++ ) {
+		const
+			xi = coords[ i ][ 0 ],
+			yi = coords[ i ][ 1 ],
+			xj = coords[ j ][ 0 ],
+			yj = coords[ j ][ 1 ];
+		
+		if(
+			( ( yi > y ) !== ( yj > y ) ) &amp;&amp;
+			( x &lt; ( xj - xi ) * ( y - yi ) / ( yj - yi ) + xi )
+		) {
+			inside = !inside;
+		}
+	}
+	
+	return inside;
+}
+
+module.exports = {
+	pointInside,
+	pointWithinPolyCoords
+};
 </code></pre>
         </article>
     </section>

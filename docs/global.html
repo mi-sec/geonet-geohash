@@ -94,6 +94,86 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="SIGFIG_HASH_LENGTH"><span class="type-signature">(constant) </span>SIGFIG_HASH_LENGTH<span class="type-signature"> :Array</span></h4>
+
+
+
+
+<div class="description">
+    <p>Significant Figure Hash Length</p>
+<p>This is a quick and dirty lookup to figure out how long our hash should be in order to guarantee a certain amount
+of trailing significant figures.
+This was calculated by determining the error: 45/2^(n-1) where n is the number of bits for a latitude or longitude.
+Key is number of desired sig figs, value is minimum length of the geohash.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line58">line 58</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -1720,6 +1800,221 @@ convertHighResolutionTime( end ); // -> { seconds: 0.000002, milli: 0.002, micro
     
 
     
+    <h4 class="name" id="decode"><span class="type-signature"></span>decode<span class="signature">(geohash, calculateErrorOffset)</span><span class="type-signature"> &rarr; {Object|Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>decode
+Decode geohash to latitude/longitude (location is approximate centre of geohash cell, to reasonable precision).</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geohash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Geohash string to be converted to latitude/longitude.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>calculateErrorOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>calculate the natural amount of geospatial inaccuracy</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line236">line 236</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        <p>Invalid geohash.</p>
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>Center of geohashed location.</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const latlng = decode( 'u120fxw' ); // latlng: { lat: 52.205, lng: 0.1188 }</code></pre>
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="deepValues"><span class="type-signature"></span>deepValues<span class="signature">(obj, r)</span><span class="type-signature"> &rarr; {Array}</span></h4>
     
 
@@ -2315,6 +2610,258 @@ convertHighResolutionTime( end ); // -> { seconds: 0.000002, milli: 0.002, micro
     
 
     
+    <h4 class="name" id="determinePrecision"><span class="type-signature"></span>determinePrecision<span class="signature">(lng, lat, precision<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>determinePrecision</p>
+<p>Estimate what precision to use based on the input longitude/latitude</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>longitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>latitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>precision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    -1
+                
+                </td>
+            
+
+            <td class="description last"><p>precision override</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>precision estimate</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="doublePrecisionDelta"><span class="type-signature"></span>doublePrecisionDelta<span class="signature">(n1, n2)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
 
@@ -2494,6 +3041,256 @@ convertHighResolutionTime( end ); // -> { seconds: 0.000002, milli: 0.002, micro
     
     <pre class="prettyprint"><code>doublePrecision( 100, 100.00000000000001 ) // -> true
 doublePrecision( 100, 100.0000000000001 ) // -> false</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="encode"><span class="type-signature"></span>encode<span class="signature">(lng, lat, precision<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>encode
+Encodes latitude/longitude to geohash, either to specified precision or to automatically
+evaluated precision.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Longitude in degrees.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Latitude in degrees.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>precision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Number of characters in resulting geohash.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line164">line 164</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        <p>Invalid geohash.</p>
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Geohash of supplied latitude/longitude.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const geohash = Geohash.encode(52.205, 0.119, 7); // geohash: 'u120fxw'</code></pre>
 
 
 
@@ -3910,6 +4707,1000 @@ floatPrecision( 100, 100.0001 ) // -> false</code></pre>
     
 
     
+    <h4 class="name" id="geohashesWithinBBox"><span class="type-signature"></span>geohashesWithinBBox<span class="signature">(minLng, minLat, maxLng, maxLat, precision)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>geohashesWithinBBox</p>
+<p>Return all the geohashes between minLng, minLat, maxLng, maxLat at the specified precision</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>minLng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox min longitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minLat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox min latitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxLng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox max longitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxLat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox max latitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>precision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    7
+                
+                </td>
+            
+
+            <td class="description last"><p>geohash precision</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line468">line 468</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>geohash array</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="geohashesWithinBBoxToGeoJSON"><span class="type-signature"></span>geohashesWithinBBoxToGeoJSON<span class="signature">(minLng, minLat, maxLng, maxLat, precision)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>geohashesWithinBBoxToGeoJSON</p>
+<p>Return GeoJSON FeatureCollection of all geohashes between minLng, minLat, maxLng, maxLat at the specified precision</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>minLng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox min longitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minLat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox min latitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxLng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox max longitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxLat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>bbox max latitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>precision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    7
+                
+                </td>
+            
+
+            <td class="description last"><p>geohash precision</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line505">line 505</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>GeoJSON of geohashes within a bbox</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="geohashToBBox"><span class="type-signature"></span>geohashToBBox<span class="signature">(hash)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Returns BBox bounds of specified geohash.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>geohash to convert to bbox</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line269">line 269</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        <p>Invalid geohash.</p>
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>bbox array</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getBBoxStartingPoint"><span class="type-signature"></span>getBBoxStartingPoint<span class="signature">(minLng, minLat, maxLng, maxLat, precision)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>getBBoxStartingPoint</p>
+<p>Beginning operations for generating a geohash bbox.
+Get the geohash for the southwest corner of a bbox and how many hash steps there are to the northeast corner.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>minLng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>minimum longitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minLat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>minimum latitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxLng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>maximum longitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxLat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>maximum latitude</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>precision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    7
+                
+                </td>
+            
+
+            <td class="description last"><p>geohash precision</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line437">line 437</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>southwest hash and how many lng/lat steps to the northeast hash</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="getRandomInt"><span class="type-signature"></span>getRandomInt<span class="signature">(min, max)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
@@ -4923,6 +6714,650 @@ isOdd( 4 ) // -&gt; false</li>
     
 
     
+    <h4 class="name" id="latitudeClamp"><span class="type-signature"></span>latitudeClamp<span class="signature">(lng)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>latitudeClamp</p>
+<p>Determines if latitude is in the realm of possibility
+If it's not, clamp the latitude value to the MIN/MAX</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>longitude</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>longitude</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="latitudeClampRelative"><span class="type-signature"></span>latitudeClampRelative<span class="signature">(lat)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>latitudeClampRelative</p>
+<p>Determines if latitude is in the realm of possibility
+If it's not, return the latitude position relative to the amount offset</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lat</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>latitude</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line108">line 108</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>latitude</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="longitudeClamp"><span class="type-signature"></span>longitudeClamp<span class="signature">(lng)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>longitudeClamp</p>
+<p>Determines if longitude is in the realm of possibility
+If it's not, clamp the longitude value to the MIN/MAX</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>longitude</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>longitude</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="longitudeClampRelative"><span class="type-signature"></span>longitudeClampRelative<span class="signature">(lng)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>longitudeClampRelative</p>
+<p>Determines if longitude is in the realm of possibility
+If it's not, return the longitude position relative to the amount offset</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>lng</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>longitude</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>longitude</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="mean"><span class="type-signature"></span>mean<span class="signature">(&hellip;args)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
@@ -5241,6 +7676,412 @@ isOdd( 4 ) // -&gt; false</li>
     <dd>
         
 <span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="neighbor"><span class="type-signature"></span>neighbor<span class="signature">(geohash, direction)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Determines neighbor cell in given direction.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geohash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Cell to which neighbor cell is required.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Direction from geohash (N/S/E/W).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line332">line 332</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        <p>Invalid geohash.</p>
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Geocode of neighbor cell.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="neighbors"><span class="type-signature"></span>neighbors<span class="signature">(geohash, asObject)</span><span class="type-signature"> &rarr; {Object|array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>neighbors
+Returns all 8 neighbor cells to specified geohash.
+This algorithm is approximately two times faster than ngeohash.
+Times for 1,000,000 iterations
+| ngeohash | Geohash  |
+| 0m3.108s | 0m1.675s |</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geohash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Geohash neighbors are required of.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>asObject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>to return as an object or array</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line366">line 366</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        <p>Invalid geohash.</p>
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>surrounding geohashes</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">array</span>
 
 
     </dd>
@@ -6790,6 +9631,208 @@ percentError( 1, 1.09, 0.08 ) // -> false</code></pre>
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>performanceDifference( 50, 100 ) // -> Performance increase of: 50%</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="pointInside"><span class="type-signature"></span>pointInside<span class="signature">(x, y<span class="signature-attributes">opt</span>, geometry)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>utilizing point-in-poly but providing support for geojson polys and holes.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x, y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>lng, lat point</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>geometry</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">geojson</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>polygon to check against</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils_geoUtils.js.html">utils/geoUtils.js</a>, <a href="utils_geoUtils.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>if the point resides within the polygon</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
 
 
@@ -8544,6 +11587,186 @@ precisionDelta( 100, 101, 0.9999999999999999, 0 ) // -> false</code></pre>
     
 
     
+    <h4 class="name" id="sizeOf"><span class="type-signature"></span>sizeOf<span class="signature">(geohash)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>sizeOf
+Calculate the size of a given geohash
+| Precision | Width       | Height      |
+|:---------:|:-----------:|:-----------:|
+| 1         | <code>≤ 5,000km</code> | <code>× 5,000km</code> |
+| 2         | <code>≤ 1,250km</code> | <code>× 625km</code>   |
+| 3         | <code>≤ 156km</code>   | <code>× 156km</code>   |
+| 4         | <code>≤ 39.1km</code>  | <code>× 19.5km</code>  |
+| 5         | <code>≤ 4.89km</code>  | <code>× 4.89km</code>  |
+| 6         | <code>≤ 1.22km</code>  | <code>× 0.61km</code>  |
+| 7         | <code>≤ 153m</code>    | <code>× 153m</code>    |
+| 8         | <code>≤ 38.2m</code>   | <code>× 19.1m</code>   |
+| 9         | <code>≤ 4.77m</code>   | <code>× 4.77m</code>   |
+| 10        | <code>≤ 1.19m</code>   | <code>× 0.596m</code>  |
+| 11        | <code>≤ 149mm</code>   | <code>× 149mm</code>   |
+| 12        | <code>≤ 37.2mm</code>  | <code>× 18.6mm</code>  |</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geohash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Geohash to determine precision size</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line410">line 410</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>area, width, and high in meters</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>sizeOf( 'dqcjpxetz' );
+// { geohash: 'dqcjpxetz', precision: 9, width: 4.77, height: 4.77, area: 22.7527 }</code></pre>
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="sizeToBytes"><span class="type-signature"></span>sizeToBytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; {bytes}</span></h4>
     
 
@@ -10214,6 +13437,163 @@ sizeToBytes( '1 Kibibytes' ) // -> 1024</code></pre>
     
 
     
+    <h4 class="name" id="toGeoJSON"><span class="type-signature"></span>toGeoJSON<span class="signature">(hash)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>convert geohash to GeoJSON</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>geohash to convert</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line519">line 519</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>geohash to geojson</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="toPrecison"><span class="type-signature"></span>toPrecison<span class="signature">(n, p)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
@@ -10858,13 +14238,13 @@ sizeToBytes( '1 Kibibytes' ) // -> 1024</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Geohash.html">Geohash</a></li></ul><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#absoluteMaximum">absoluteMaximum</a></li><li><a href="global.html#absoluteMinimum">absoluteMinimum</a></li><li><a href="global.html#absoluteValue">absoluteValue</a></li><li><a href="global.html#arrayFilteredForRegex">arrayFilteredForRegex</a></li><li><a href="global.html#ascendingSort">ascendingSort</a></li><li><a href="global.html#bytesToSize">bytesToSize</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#convertHighResolutionTime">convertHighResolutionTime</a></li><li><a href="global.html#convertHRTimeToReadable">convertHRTimeToReadable</a></li><li><a href="global.html#decode">decode</a></li><li><a href="global.html#deepValues">deepValues</a></li><li><a href="global.html#defineProperty">defineProperty</a></li><li><a href="global.html#degreesToRadians">degreesToRadians</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#doublePrecisionDelta">doublePrecisionDelta</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#escapeRegExp">escapeRegExp</a></li><li><a href="global.html#findMissingKeys">findMissingKeys</a></li><li><a href="global.html#flattenObject">flattenObject</a></li><li><a href="global.html#floatPrecisionDelta">floatPrecisionDelta</a></li><li><a href="global.html#generateRandomHex">generateRandomHex</a></li><li><a href="global.html#generateRandomNumber">generateRandomNumber</a></li><li><a href="global.html#generateRandomString">generateRandomString</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#getValueForRegexKey">getValueForRegexKey</a></li><li><a href="global.html#isEven">isEven</a></li><li><a href="global.html#isOdd">isOdd</a></li><li><a href="global.html#isSemanticVersion">isSemanticVersion</a></li><li><a href="global.html#isUUIDv4">isUUIDv4</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#mean">mean</a></li><li><a href="global.html#minAndMax">minAndMax</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#nonEnumerableProperty">nonEnumerableProperty</a></li><li><a href="global.html#objectFilteredForRegex">objectFilteredForRegex</a></li><li><a href="global.html#objectId">objectId</a></li><li><a href="global.html#objectToFlatMap">objectToFlatMap</a></li><li><a href="global.html#percentChange">percentChange</a></li><li><a href="global.html#percentDifference">percentDifference</a></li><li><a href="global.html#percentError">percentError</a></li><li><a href="global.html#performanceDifference">performanceDifference</a></li><li><a href="global.html#pointInside">pointInside</a></li><li><a href="global.html#positiveFloorAddition">positiveFloorAddition</a></li><li><a href="global.html#precisionDelta">precisionDelta</a></li><li><a href="global.html#radiansToDegrees">radiansToDegrees</a></li><li><a href="global.html#radixToNumber">radixToNumber</a></li><li><a href="global.html#recursivePromiseResolve">recursivePromiseResolve</a></li><li><a href="global.html#regexpFromString">regexpFromString</a></li><li><a href="global.html#removeItemsFromArray">removeItemsFromArray</a></li><li><a href="global.html#removeItemsFromObject">removeItemsFromObject</a></li><li><a href="global.html#replaceMatchesWithValue">replaceMatchesWithValue</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#sizeToBytes">sizeToBytes</a></li><li><a href="global.html#sum">sum</a></li><li><a href="global.html#testDigitcase">testDigitcase</a></li><li><a href="global.html#testLowercase">testLowercase</a></li><li><a href="global.html#testMinimumLength">testMinimumLength</a></li><li><a href="global.html#testSpecialcase">testSpecialcase</a></li><li><a href="global.html#testUppercase">testUppercase</a></li><li><a href="global.html#toFixed">toFixed</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li><li><a href="global.html#toPrecison">toPrecison</a></li><li><a href="global.html#wait">wait</a></li><li><a href="global.html#waitFor">waitFor</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jan 03 2019 15:56:59 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Feb 11 2019 12:12:05 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
