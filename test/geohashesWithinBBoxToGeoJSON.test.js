@@ -18,14 +18,14 @@ describe( '[geohash.geohashesWithinBBoxToGeoJSON]', () => {
 	it( 'should return GeoJSON of geohashes within a bbox',
 		done => {
 			const
-				result = readFileSync(
+				expected = readFileSync(
 					join( __dirname, './geohashesWithinBBoxToGeoJSON.test.results.json' ),
 					'utf8'
 				),
-				extent = [ -158.53271484375, 22.169601410638865, -157.69500732421875, 22.740723091194727 ],
-				tested = geohashesWithinBBoxToGeoJSON( ...extent, 5 );
+				extent   = [ -158.53271484375, 22.169601410638865, -157.69500732421875, 22.740723091194727 ],
+				tested   = geohashesWithinBBoxToGeoJSON( ...extent, 5 );
 			
-			expect( tested ).to.deep.eq( JSON.parse( result ) );
+			expect( tested ).to.deep.eq( JSON.parse( expected ) );
 			
 			done();
 		}
