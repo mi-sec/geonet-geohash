@@ -1,6 +1,6 @@
 {
 	"name": "@parellin/geohash",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Geohash decode/encoder",
 	"main": "index.js",
 	"scripts": {
