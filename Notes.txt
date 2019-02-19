@@ -1,14 +1,6 @@
-SELECT ST_AsGeoJSON(geometry) FROM detections;
-
 https://gis.stackexchange.com/questions/59087/how-to-calculate-the-size-a-bounding-box
 
 https://tools.ietf.org/html/rfc7946#section-3.3
-
-Use Turf hexGrid to return multiple geohash zones?
-
-http://geojson.io/#map=2/20.0/0.0
-
-https://github.com/ashwin711/georaptor/blob/master/georaptor.py
 
 /**
  * Lng = X
