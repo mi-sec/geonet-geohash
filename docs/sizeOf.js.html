@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: GeohashStreamGeoJSON.js</title>
+    <title>JSDoc: Source: sizeOf.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: GeohashStreamGeoJSON.js</h1>
+    <h1 class="page-title">Source: sizeOf.js</h1>
 
     
 
@@ -27,46 +27,54 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: GeohashStreamGeoJSON.js
+ * File: sizeOf.js
  * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Feb-2019
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
  *******************************************************************************************************/
 'use strict';
 
 const
-	GeohashStream = require( './GeohashStream' ),
-	toGeoJSON     = require( './toGeoJSON' );
+	{ PRECISION_AREA } = require( './variables' );
 
-class GeohashStreamGeoJSON extends GeohashStream
-{
-	/**
-	 * GeohashStreamGeoJSON
-	 *
-	 * extends GeohashStream
-	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
-	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
-	{
-		super( minLng, minLat, maxLng, maxLat, precision );
+/**
+ * sizeOf
+ * Calculate the size of a given geohash
+ * | Precision | Width       | Height      |
+ * |:---------:|:-----------:|:-----------:|
+ * | 1         | `≤ 5,000km` | `× 5,000km` |
+ * | 2         | `≤ 1,250km` | `× 625km`   |
+ * | 3         | `≤ 156km`   | `× 156km`   |
+ * | 4         | `≤ 39.1km`  | `× 19.5km`  |
+ * | 5         | `≤ 4.89km`  | `× 4.89km`  |
+ * | 6         | `≤ 1.22km`  | `× 0.61km`  |
+ * | 7         | `≤ 153m`    | `× 153m`    |
+ * | 8         | `≤ 38.2m`   | `× 19.1m`   |
+ * | 9         | `≤ 4.77m`   | `× 4.77m`   |
+ * | 10        | `≤ 1.19m`   | `× 0.596m`  |
+ * | 11        | `≤ 149mm`   | `× 149mm`   |
+ * | 12        | `≤ 37.2mm`  | `× 18.6mm`  |
+ *
+ * @param {string} geohash - Geohash to determine precision size
+ * @return {{geohash: string, area: number, precision, width, height}} - area, width, and high in meters
+ * @example
+ *
+ * sizeOf( 'dqcjpxetz' );
+ * // { geohash: 'dqcjpxetz', precision: 9, width: 4.77, height: 4.77, area: 22.7527 }
+ */
+function sizeOf( geohash ) {
+	if( geohash.length === 0 ) {
+		throw new Error( 'Invalid geohash' );
 	}
 	
-	_read()
-	{
-		let chunk;
-		while( ( chunk = super.nextChunk() ) !== null ) {
-			this.push( JSON.stringify( toGeoJSON( chunk ) ) );
-		}
-		
-		this.push( null );
-	}
+	const
+		precision         = geohash.length,
+		{ width, height } = PRECISION_AREA[ precision ],
+		area              = width * height;
+	
+	return { geohash, precision, width, height, area };
 }
 
-module.exports = GeohashStreamGeoJSON;
+module.exports = sizeOf;
 </code></pre>
         </article>
     </section>

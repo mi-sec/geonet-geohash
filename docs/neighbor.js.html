@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: GeohashStreamGeoJSON.js</title>
+    <title>JSDoc: Source: neighbor.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: GeohashStreamGeoJSON.js</h1>
+    <h1 class="page-title">Source: neighbor.js</h1>
 
     
 
@@ -27,46 +27,49 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: GeohashStreamGeoJSON.js
+ * File: neighbor.js
  * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Feb-2019
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
  *******************************************************************************************************/
 'use strict';
 
 const
-	GeohashStream = require( './GeohashStream' ),
-	toGeoJSON     = require( './toGeoJSON' );
-
-class GeohashStreamGeoJSON extends GeohashStream
-{
-	/**
-	 * GeohashStreamGeoJSON
-	 *
-	 * extends GeohashStream
-	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
-	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
 	{
-		super( minLng, minLat, maxLng, maxLat, precision );
+		BASE32,
+		NEIGHBOR_CODEX,
+		BORDER_CODEX
+	} = require( './variables' );
+
+/**
+ * Determines neighbor cell in given direction.
+ *
+ * @param {string} geohash - Cell to which neighbor cell is required.
+ * @param {string} direction - Direction from geohash (N/S/E/W).
+ * @returns {string} Geocode of neighbor cell.
+ * @throws  Invalid geohash.
+ */
+function neighbor( geohash, direction ) {
+	if( geohash.length === 0 ) {
+		throw new Error( 'Invalid geohash' );
+	} else if( 'nsew'.indexOf( direction ) === -1 ) {
+		throw new Error( 'Invalid direction' );
 	}
 	
-	_read()
-	{
-		let chunk;
-		while( ( chunk = super.nextChunk() ) !== null ) {
-			this.push( JSON.stringify( toGeoJSON( chunk ) ) );
-		}
-		
-		this.push( null );
+	const
+		lastCh = geohash.slice( -1 ),
+		type   = geohash.length % 2;
+	
+	let parent = geohash.slice( 0, -1 );
+	
+	if( BORDER_CODEX[ direction ][ type ].indexOf( lastCh ) !== -1 &amp;&amp; parent !== '' ) {
+		parent = neighbor( parent, direction );
 	}
+	
+	// append letter for direction to parent
+	return parent + BASE32.charAt( NEIGHBOR_CODEX[ direction ][ type ].indexOf( lastCh ) );
 }
 
-module.exports = GeohashStreamGeoJSON;
+module.exports = neighbor;
 </code></pre>
         </article>
     </section>

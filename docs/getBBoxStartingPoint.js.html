@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: GeohashStreamGeoJSON.js</title>
+    <title>JSDoc: Source: getBBoxStartingPoint.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: GeohashStreamGeoJSON.js</h1>
+    <h1 class="page-title">Source: getBBoxStartingPoint.js</h1>
 
     
 
@@ -27,46 +27,51 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: GeohashStreamGeoJSON.js
+ * File: getBBoxStartingPoint.js
  * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Feb-2019
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
  *******************************************************************************************************/
 'use strict';
 
 const
-	GeohashStream = require( './GeohashStream' ),
-	toGeoJSON     = require( './toGeoJSON' );
+	decode        = require( './decode' ),
+	encode        = require( './encode' ),
+	geohashToBBox = require( './geohashToBBox' );
 
-class GeohashStreamGeoJSON extends GeohashStream
-{
-	/**
-	 * GeohashStreamGeoJSON
-	 *
-	 * extends GeohashStream
-	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
-	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
-	{
-		super( minLng, minLat, maxLng, maxLat, precision );
-	}
+/**
+ * getBBoxStartingPoint
+ *
+ * Beginning operations for generating a geohash bbox.
+ * Get the geohash for the southwest corner of a bbox and how many hash steps there are to the northeast corner.
+ *
+ * @param {number} minLng - minimum longitude
+ * @param {number} minLat - minimum latitude
+ * @param {number} maxLng - maximum longitude
+ * @param {number} maxLat - maximum latitude
+ * @param {number} precision - geohash precision
+ * @returns {{hashSouthWest: string, lngStep: number, latStep: number}}
+ * southwest hash and how many lng/lat steps to the northeast hash
+ */
+function getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision = 7 ) {
+	const
+		hashSouthWest = encode( minLng, minLat, precision ),
+		hashNorthEast = encode( maxLng, maxLat, precision ),
+		latLng        = decode( hashSouthWest, true ),
+		perLng        = latLng.error.lng * 2,
+		perLat        = latLng.error.lat * 2,
+		boxSouthWest  = geohashToBBox( hashSouthWest ),
+		boxNorthEast  = geohashToBBox( hashNorthEast ),
+		lngStep       = Math.round( ( boxNorthEast[ 0 ] - boxSouthWest[ 0 ] ) / perLng ),
+		latStep       = Math.round( ( boxNorthEast[ 1 ] - boxSouthWest[ 1 ] ) / perLat );
 	
-	_read()
-	{
-		let chunk;
-		while( ( chunk = super.nextChunk() ) !== null ) {
-			this.push( JSON.stringify( toGeoJSON( chunk ) ) );
-		}
-		
-		this.push( null );
-	}
+	return {
+		latStep,
+		lngStep,
+		hashSouthWest
+	};
 }
 
-module.exports = GeohashStreamGeoJSON;
+module.exports = getBBoxStartingPoint;
 </code></pre>
         </article>
     </section>

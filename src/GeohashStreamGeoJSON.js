@@ -6,12 +6,8 @@
 'use strict';
 
 const
-	GeohashStream = require( './GeohashStream' );
-
-const
-	{
-		toGeoJSON
-	} = require( './Geohash' );
+	GeohashStream = require( './GeohashStream' ),
+	toGeoJSON     = require( './toGeoJSON' );
 
 class GeohashStreamGeoJSON extends GeohashStream
 {

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utils.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utils.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
+ * File: utils.js
+ * Project: geohash
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
+ *******************************************************************************************************/
+'use strict';
+
+const
+	{
+		ENCODE_AUTO,
+		MIN_LNG,
+		MIN_LAT,
+		MAX_LNG,
+		MAX_LAT
+	} = require( './variables' );
+
+/**
+ * longitudeClamp
+ *
+ * Determines if longitude is in the realm of possibility
+ * If it's not, clamp the longitude value to the MIN/MAX
+ * @param {number} lng - longitude
+ * @returns {number} - longitude
+ */
+function longitudeClamp( lng ) {
+	return Math.min( Math.max( MIN_LNG, lng ), MAX_LNG );
+}
+
+/**
+ * latitudeClamp
+ *
+ * Determines if latitude is in the realm of possibility
+ * If it's not, clamp the latitude value to the MIN/MAX
+ * @param {number} lng - longitude
+ * @returns {number} - longitude
+ */
+function latitudeClamp( lng ) {
+	return Math.min( Math.max( MIN_LAT, lng ), MAX_LAT );
+}
+
+/**
+ * longitudeClampRelative
+ *
+ * Determines if longitude is in the realm of possibility
+ * If it's not, return the longitude position relative to the amount offset
+ * @param {number} lng - longitude
+ * @returns {number} - longitude
+ */
+function longitudeClampRelative( lng ) {
+	return lng > MAX_LNG ?
+		MIN_LNG + lng % MAX_LNG :
+		lng &lt; MIN_LNG ?
+			MAX_LNG + lng % MAX_LNG :
+			lng;
+}
+
+/**
+ * latitudeClampRelative
+ *
+ * Determines if latitude is in the realm of possibility
+ * If it's not, return the latitude position relative to the amount offset
+ * @param {number} lat - latitude
+ * @returns {number} - latitude
+ */
+function latitudeClampRelative( lat ) {
+	return lat > MAX_LAT ?
+		MIN_LAT + lat % MAX_LAT :
+		lat &lt; MIN_LAT ?
+			MAX_LAT + lat % MAX_LAT :
+			lat;
+}
+
+/**
+ * determinePrecision
+ *
+ * Estimate what precision to use based on the input longitude/latitude
+ *
+ * @param {number} lng - longitude
+ * @param {number} lat - latitude
+ * @param {number?} [precision=-1] - precision override
+ * @returns {number} - precision estimate
+ */
+function determinePrecision( lng, lat, precision = -1 ) {
+	if( precision === ENCODE_AUTO ) {
+		if( lng !== +lng || lat !== +lat ) {
+			throw new Error( 'number notation required for auto precision.' );
+		}
+		
+		lng = longitudeClampRelative( lng );
+		lat = latitudeClampRelative( lat );
+		
+		if( ~~lat === lat &amp;&amp; ~~lng === lng ) {
+			precision = 0;
+		} else {
+			const
+				latLen  = +( lat.toString( 10 ).length ),
+				lngLen  = +( lng.toString( 10 ).length ),
+				average = ( latLen + lngLen ) / 2;
+			
+			precision = average >= 12 ? 12 : average;
+		}
+	}
+	
+	return ~~precision;
+}
+
+function determineDirection( [ x, y ] ) {
+	if( x === 0 &amp;&amp; y === 0 ) {
+		return 'c';
+	} else if( !( x ^ y ) ) {
+		return x &amp; y === 1 ? 'ne' : 'sw';
+	} else if( !!( x &amp; y ) ) {
+		return x === 1 ? 'se' : 'nw';
+	} else if( ( x | y ) > 0 ) {
+		return !!x ? 'e' : 'n';
+	} else {
+		return !!x ? 'w' : 's';
+	}
+}
+
+module.exports = {
+	longitudeClamp,
+	latitudeClamp,
+	longitudeClampRelative,
+	latitudeClampRelative,
+	determinePrecision,
+	determineDirection
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GeohashStream.html">GeohashStream</a></li><li><a href="GeohashStreamGeoJSON.html">GeohashStreamGeoJSON</a></li></ul><h3>Global</h3><ul><li><a href="global.html#decode">decode</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Feb 19 2019 07:50:55 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

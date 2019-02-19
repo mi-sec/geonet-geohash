@@ -6,13 +6,13 @@
 'use strict';
 
 const
-	chai                 = require( 'chai' ),
-	expect               = chai.expect,
-	{ readFileSync }     = require( 'fs' ),
-	{ join }             = require( 'path' ),
-	GeohashStreamGeoJSON = require( '../src/GeohashStreamGeoJSON' );
+	chai                     = require( 'chai' ),
+	expect                   = chai.expect,
+	{ readFileSync }         = require( 'fs' ),
+	{ join }                 = require( 'path' ),
+	{ GeohashStreamGeoJSON } = require( '../index' );
 
-describe( '[geohash.streamGeoJSON]', () => {
+describe( '[geohash.GeohashStreamGeoJSON]', () => {
 	it( 'should stream geohashes within a bbox in GeoJSON',
 		done => {
 			const

@@ -9,10 +9,8 @@ const
 	{ Readable } = require( 'stream' );
 
 const
-	{
-		getBBoxStartingPoint,
-		neighbor
-	} = require( './Geohash' );
+	getBBoxStartingPoint = require( './getBBoxStartingPoint' ),
+	neighbor             = require( './neighbor' );
 
 class GeohashStream extends Readable
 {

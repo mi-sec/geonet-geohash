@@ -28,60 +28,53 @@ Geohash decode/encoder
 **Basic usage:**
 ```
 const Geohash = require( '@parellin/geohash' );
-
-const geohash = Geohash.encode( 38.866, -77.480, 7 ); // geohash: 'dqbvhgk'
+const hash = Geohash.encode( -77.480, 38.866, 7 ); // hash: 'dqbvhgk'
 ```
 
 ### `encode`
 
-Encodes latitude/longitude to geohash, either to specified precision or to automatically evaluated precision.
+Encodes longitude/latitude to geohash, either to specified precision or to automatically evaluated precision.
 
 **params**
-- `lat` {number} Latitude in degrees.
 - `lng` {number} Longitude in degrees.
+- `lat` {number} Latitude in degrees.
 - `precision` {number} Number of characters in resulting geohash.
 
-**returns**: Geohash of supplied latitude/longitude.
+**returns**: Geohash of supplied longitude/latitude.
 
 ```javascript
-const geohash = Geohash.encode( 38.8665, -77.480, 7 ); // geohash: 'dqbvhgk'
+const hash = Geohash.encode( -77.480, 38.866, 7 ); // hash: 'dqbvhgk'
 ```
 
 ### `decode`
 
-Decode geohash to latitude/longitude (location is approximate centre of geohash cell, to reasonable precision).
+Decode geohash to longitude/latitude (location is approximate center of geohash cell, to reasonable precision).
 	 
 **params**
-- `geohash` {string} Geohash string to be converted to latitude/longitude.
+- `geohash` {string} Geohash string to be converted to longitude/latitude.
 
 **returns**: (Center of) geohashed location.
 
 ```javascript
-const latlng = Geohash.decode( 'dqbvhgk' ); // latlng: { lat: 38.8662, lng: -77.4804 }
+const latlng = Geohash.decode( 'dqbvhgk' ); // latlng: { lng: -77.4804, lat: 38.8662 }
 ```
 
 ### `neighbors`
 
-Returns all 8 adjacent cells to specified geohash.
+Returns 8 adjacent cells to specified geohash.
 
 **params**
-- `geohash` {string} Geohash neighbors are required of.
+- `geohash` {string} Geohash to find neighbors of.
+- `asObject` {boolean} return geohashes in an object (`{c,n,ne,e,se,s,sw,w,nw}`)
 
 **returns**: surrounding geohashes
 
 ```javascript
 const latlng = Geohash.neighbors( 'dqcjpxetzh6q' );
-// {
-// 		nw: 'dqcjpxetzh6p',
-// 		n: 'dqcjpxetzh6r',
-// 		ne: 'dqcjpxetzh6x',
-// 		w: 'dqcjpxetzh6n',
-// 		c: 'dqcjpxetzh6q',
-// 		e: 'dqcjpxetzh6w',
-// 		sw: 'dqcjpxetzh6j',
-// 		s: 'dqcjpxetzh6m',
-// 		se: 'dqcjpxetzh6t'
-// }
+[
+	'dqcjpxetzh6r', 'dqcjpxetzh6x', 'dqcjpxetzh6w', 'dqcjpxetzh6t',
+	'dqcjpxetzh6m', 'dqcjpxetzh6j', 'dqcjpxetzh6n', 'dqcjpxetzh6p'
+]
 ```
 
 Example:
@@ -97,3 +90,65 @@ Example:
 │ 'south'  │   'dqcjpxetzh6j'  'dqcjpxetzh6m'  'dqcjpxetzh6t'   │
 ┴──────────┴────────────────────────────────────────────────────┘
 ```
+
+### GeohashStream
+
+`GeohashStream` takes in a BBox and streams geohashes within that bbox.
+
+**params**
+- `minLng` {number} bbox min longitude
+- `minLat` {number} bbox min latitude
+- `maxLng` {number} bbox max longitude
+- `maxLat` {number} bbox max latitude
+- `precision` {number=7} geohash precision (defaults to 7)
+
+```javascript
+new Geohash.GeohashStream( 0.1, 52.2, 0.2, 52.3, 3 )
+	.on( 'data', d => console.log( d.toString() ) )
+	.on( 'end', () => console.log( 'done' ) );
+
+// u12
+```
+
+### GeohashStreamGeoJSON
+
+`GeohashStreamGeoJSON` is the same as `GeohashStream` but streams back GeoJSON
+
+**params**
+- `minLng` {number} bbox min longitude
+- `minLat` {number} bbox min latitude
+- `maxLng` {number} bbox max longitude
+- `maxLat` {number} bbox max latitude
+- `precision` {number=7} geohash precision (defaults to 7)
+
+```javascript
+new Geohash.GeohashStreamGeoJSON( 0.1, 52.2, 0.2, 52.3, 3 )
+	.on( 'data', d => console.log( d.toString() ) )
+	.on( 'end', () => console.log( 'done' ) );
+
+// {
+// 	"type": "Feature",
+// 	"bbox": [ 0, 52.03125, 1.40625, 53.4375 ],
+// 	"properties": {},
+// 	"geometry": {
+// 		"type": "Polygon",
+// 		"coordinates": [ [
+// 			[ 0, 52.03125 ],
+// 			[ 1.40625, 52.03125 ],
+// 			[ 1.40625, 53.4375 ],
+// 			[ 0, 53.4375 ],
+// 			[ 0, 52.03125 ]
+// 		] ]
+// 	}
+// }
+```
+
+
+
+
+
+
+
+
+
+

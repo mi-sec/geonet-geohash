@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: GeohashStreamGeoJSON.js</title>
+    <title>JSDoc: Source: decode.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: GeohashStreamGeoJSON.js</h1>
+    <h1 class="page-title">Source: decode.js</h1>
 
     
 
@@ -27,46 +27,54 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: GeohashStreamGeoJSON.js
+ * File: decode.js
  * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Feb-2019
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
  *******************************************************************************************************/
 'use strict';
 
 const
-	GeohashStream = require( './GeohashStream' ),
-	toGeoJSON     = require( './toGeoJSON' );
+	geohashToBBox = require( './geohashToBBox' );
 
-class GeohashStreamGeoJSON extends GeohashStream
-{
-	/**
-	 * GeohashStreamGeoJSON
-	 *
-	 * extends GeohashStream
-	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
-	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
-	{
-		super( minLng, minLat, maxLng, maxLat, precision );
-	}
+/**
+ * decode
+ * Decode geohash to latitude/longitude (location is approximate centre of geohash cell, to reasonable precision).
+ * Will round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places.
+ *
+ * @param   {string} geohash - Geohash string to be converted to latitude/longitude.
+ * @param   {boolean} calculateErrorOffset - calculate the natural amount of geospatial inaccuracy
+ * @returns {{lng,lat}|{lng,lat,error:{lng,lat}}} - Center of geohashed location.
+ * @throws  Invalid geohash.
+ *
+ * @example
+ *     const latlng = decode( 'dqbvhgk' ); // latlng: { lng: -77.4804, lat: 38.8662 }
+ */
+function decode( geohash, calculateErrorOffset = false ) {
+	const
+		bbox = geohashToBBox( geohash );
 	
-	_read()
-	{
-		let chunk;
-		while( ( chunk = super.nextChunk() ) !== null ) {
-			this.push( JSON.stringify( toGeoJSON( chunk ) ) );
-		}
+	let
+		lng = ( bbox[ 0 ] + bbox[ 2 ] ) / 2,
+		lat = ( bbox[ 1 ] + bbox[ 3 ] ) / 2;
+	
+	if( calculateErrorOffset ) {
+		return {
+			lng, lat,
+			error: {
+				lng: bbox[ 2 ] - lng,
+				lat: bbox[ 3 ] - lat
+			}
+		};
+	} else {
+		// round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
+		lng = +lng.toFixed( ~~( 2 - Math.log( bbox[ 2 ] - bbox[ 0 ] ) / Math.LN10 ) );
+		lat = +lat.toFixed( ~~( 2 - Math.log( bbox[ 3 ] - bbox[ 1 ] ) / Math.LN10 ) );
 		
-		this.push( null );
+		return { lng, lat };
 	}
 }
 
-module.exports = GeohashStreamGeoJSON;
+module.exports = decode;
 </code></pre>
         </article>
     </section>

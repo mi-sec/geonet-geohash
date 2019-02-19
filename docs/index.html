@@ -119,39 +119,32 @@
 <h3>Installation</h3><p><code>npm i @parellin/geohash</code></p>
 <h3>Usage</h3><p><strong>Basic usage:</strong></p>
 <pre class="prettyprint source"><code>const Geohash = require( '@parellin/geohash' );
-
-const geohash = Geohash.encode( 38.866, -77.480, 7 ); // geohash: 'dqbvhgk'</code></pre><h3><code>encode</code></h3><p>Encodes latitude/longitude to geohash, either to specified precision or to automatically evaluated precision.</p>
+const hash = Geohash.encode( -77.480, 38.866, 7 ); // hash: 'dqbvhgk'</code></pre><h3><code>encode</code></h3><p>Encodes longitude/latitude to geohash, either to specified precision or to automatically evaluated precision.</p>
 <p><strong>params</strong></p>
 <ul>
-<li><code>lat</code> {number} Latitude in degrees.</li>
 <li><code>lng</code> {number} Longitude in degrees.</li>
+<li><code>lat</code> {number} Latitude in degrees.</li>
 <li><code>precision</code> {number} Number of characters in resulting geohash.</li>
 </ul>
-<p><strong>returns</strong>: Geohash of supplied latitude/longitude.</p>
-<pre class="prettyprint source lang-javascript"><code>const geohash = Geohash.encode( 38.8665, -77.480, 7 ); // geohash: 'dqbvhgk'</code></pre><h3><code>decode</code></h3><p>Decode geohash to latitude/longitude (location is approximate centre of geohash cell, to reasonable precision).</p>
+<p><strong>returns</strong>: Geohash of supplied longitude/latitude.</p>
+<pre class="prettyprint source lang-javascript"><code>const hash = Geohash.encode( -77.480, 38.866, 7 ); // hash: 'dqbvhgk'</code></pre><h3><code>decode</code></h3><p>Decode geohash to longitude/latitude (location is approximate center of geohash cell, to reasonable precision).</p>
 <p><strong>params</strong></p>
 <ul>
-<li><code>geohash</code> {string} Geohash string to be converted to latitude/longitude.</li>
+<li><code>geohash</code> {string} Geohash string to be converted to longitude/latitude.</li>
 </ul>
 <p><strong>returns</strong>: (Center of) geohashed location.</p>
-<pre class="prettyprint source lang-javascript"><code>const latlng = Geohash.decode( 'dqbvhgk' ); // latlng: { lat: 38.8662, lng: -77.4804 }</code></pre><h3><code>neighbors</code></h3><p>Returns all 8 adjacent cells to specified geohash.</p>
+<pre class="prettyprint source lang-javascript"><code>const latlng = Geohash.decode( 'dqbvhgk' ); // latlng: { lng: -77.4804, lat: 38.8662 }</code></pre><h3><code>neighbors</code></h3><p>Returns 8 adjacent cells to specified geohash.</p>
 <p><strong>params</strong></p>
 <ul>
-<li><code>geohash</code> {string} Geohash neighbors are required of.</li>
+<li><code>geohash</code> {string} Geohash to find neighbors of.</li>
+<li><code>asObject</code> {boolean} return geohashes in an object (<code>{c,n,ne,e,se,s,sw,w,nw}</code>)</li>
 </ul>
 <p><strong>returns</strong>: surrounding geohashes</p>
 <pre class="prettyprint source lang-javascript"><code>const latlng = Geohash.neighbors( 'dqcjpxetzh6q' );
-// {
-//         nw: 'dqcjpxetzh6p',
-//         n: 'dqcjpxetzh6r',
-//         ne: 'dqcjpxetzh6x',
-//         w: 'dqcjpxetzh6n',
-//         c: 'dqcjpxetzh6q',
-//         e: 'dqcjpxetzh6w',
-//         sw: 'dqcjpxetzh6j',
-//         s: 'dqcjpxetzh6m',
-//         se: 'dqcjpxetzh6t'
-// }</code></pre><p>Example:</p>
+[
+    'dqcjpxetzh6r', 'dqcjpxetzh6x', 'dqcjpxetzh6w', 'dqcjpxetzh6t',
+    'dqcjpxetzh6m', 'dqcjpxetzh6j', 'dqcjpxetzh6n', 'dqcjpxetzh6p'
+]</code></pre><p>Example:</p>
 <p><code>Geohash.neighbors( 'dqcjpxetzh6q' );</code></p>
 <pre class="prettyprint source"><code>           ┬────────────────────────────────────────────────────┐
            │      'west'          'center'         'east'       │
@@ -159,7 +152,47 @@ const geohash = Geohash.encode( 38.866, -77.480, 7 ); // geohash: 'dqbvhgk'</cod
 │ 'north'  │   'dqcjpxetzh6p'  'dqcjpxetzh6r'  'dqcjpxetzh6x'   │
 │ 'center' │   'dqcjpxetzh6n'  'dqcjpxetzh6q'  'dqcjpxetzh6w'   │
 │ 'south'  │   'dqcjpxetzh6j'  'dqcjpxetzh6m'  'dqcjpxetzh6t'   │
-┴──────────┴────────────────────────────────────────────────────┘</code></pre></article>
+┴──────────┴────────────────────────────────────────────────────┘</code></pre><h3>GeohashStream</h3><p><code>GeohashStream</code> takes in a BBox and streams geohashes within that bbox.</p>
+<p><strong>params</strong></p>
+<ul>
+<li><code>minLng</code> {number} bbox min longitude</li>
+<li><code>minLat</code> {number} bbox min latitude</li>
+<li><code>maxLng</code> {number} bbox max longitude</li>
+<li><code>maxLat</code> {number} bbox max latitude</li>
+<li><code>precision</code> {number=7} geohash precision (defaults to 7)</li>
+</ul>
+<pre class="prettyprint source lang-javascript"><code>new Geohash.GeohashStream( 0.1, 52.2, 0.2, 52.3, 3 )
+    .on( 'data', d => console.log( d.toString() ) )
+    .on( 'end', () => console.log( 'done' ) );
+
+// u12</code></pre><h3>GeohashStreamGeoJSON</h3><p><code>GeohashStreamGeoJSON</code> is the same as <code>GeohashStream</code> but streams back GeoJSON</p>
+<p><strong>params</strong></p>
+<ul>
+<li><code>minLng</code> {number} bbox min longitude</li>
+<li><code>minLat</code> {number} bbox min latitude</li>
+<li><code>maxLng</code> {number} bbox max longitude</li>
+<li><code>maxLat</code> {number} bbox max latitude</li>
+<li><code>precision</code> {number=7} geohash precision (defaults to 7)</li>
+</ul>
+<pre class="prettyprint source lang-javascript"><code>new Geohash.GeohashStreamGeoJSON( 0.1, 52.2, 0.2, 52.3, 3 )
+    .on( 'data', d => console.log( d.toString() ) )
+    .on( 'end', () => console.log( 'done' ) );
+
+// {
+//     &quot;type&quot;: &quot;Feature&quot;,
+//     &quot;bbox&quot;: [ 0, 52.03125, 1.40625, 53.4375 ],
+//     &quot;properties&quot;: {},
+//     &quot;geometry&quot;: {
+//         &quot;type&quot;: &quot;Polygon&quot;,
+//         &quot;coordinates&quot;: [ [
+//             [ 0, 52.03125 ],
+//             [ 1.40625, 52.03125 ],
+//             [ 1.40625, 53.4375 ],
+//             [ 0, 53.4375 ],
+//             [ 0, 52.03125 ]
+//         ] ]
+//     }
+// }</code></pre></article>
     </section>
 
 
@@ -176,7 +209,7 @@ const geohash = Geohash.encode( 38.866, -77.480, 7 ); // geohash: 'dqbvhgk'</cod
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Feb 12 2019 12:16:24 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Feb 19 2019 07:50:55 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: GeohashStreamGeoJSON.js</title>
+    <title>JSDoc: Source: neighbors.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: GeohashStreamGeoJSON.js</h1>
+    <h1 class="page-title">Source: neighbors.js</h1>
 
     
 
@@ -27,46 +27,47 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: GeohashStreamGeoJSON.js
+ * File: neighbors.js
  * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Feb-2019
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
  *******************************************************************************************************/
 'use strict';
 
-const
-	GeohashStream = require( './GeohashStream' ),
-	toGeoJSON     = require( './toGeoJSON' );
+const neighbor = require( './neighbor' );
 
-class GeohashStreamGeoJSON extends GeohashStream
-{
-	/**
-	 * GeohashStreamGeoJSON
-	 *
-	 * extends GeohashStream
-	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
-	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
-	{
-		super( minLng, minLat, maxLng, maxLat, precision );
-	}
+/**
+ * neighbors
+ * Returns all 8 neighbor cells to specified geohash.
+ * This algorithm is approximately two times faster than ngeohash.
+ * Times for 1,000,000 iterations
+ * | ngeohash | Geohash  |
+ * | 0m3.108s | 0m1.675s |
+ *
+ * @param   {string} geohash - Geohash neighbors are required of.
+ * @param   {boolean} asObject - to return as an object or array
+ * @returns {{c,n,ne,e,se,s,sw,w,nw}|array} - surrounding geohashes
+ * @throws  Invalid geohash.
+ */
+function neighbors( geohash, asObject = false ) {
+	const [ n, ne, e, se, s, sw, w, nw ] = [
+		neighbor( geohash, 'n' ),
+		neighbor( neighbor( geohash, 'n' ), 'e' ),
+		neighbor( geohash, 'e' ),
+		neighbor( neighbor( geohash, 's' ), 'e' ),
+		neighbor( geohash, 's' ),
+		neighbor( neighbor( geohash, 's' ), 'w' ),
+		neighbor( geohash, 'w' ),
+		neighbor( neighbor( geohash, 'n' ), 'w' )
+	];
 	
-	_read()
-	{
-		let chunk;
-		while( ( chunk = super.nextChunk() ) !== null ) {
-			this.push( JSON.stringify( toGeoJSON( chunk ) ) );
-		}
-		
-		this.push( null );
+	if( asObject ) {
+		return { c: geohash, n, ne, e, se, s, sw, w, nw };
+	} else {
+		return [ n, ne, e, se, s, sw, w, nw ];
 	}
 }
 
-module.exports = GeohashStreamGeoJSON;
+module.exports = neighbors;
 </code></pre>
         </article>
     </section>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: GeohashStreamGeoJSON.js</title>
+    <title>JSDoc: Source: geohashToBBox.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: GeohashStreamGeoJSON.js</h1>
+    <h1 class="page-title">Source: geohashToBBox.js</h1>
 
     
 
@@ -27,46 +27,71 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: GeohashStreamGeoJSON.js
+ * File: geohashToBBox.js
  * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Feb-2019
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
  *******************************************************************************************************/
 'use strict';
 
 const
-	GeohashStream = require( './GeohashStream' ),
-	toGeoJSON     = require( './toGeoJSON' );
-
-class GeohashStreamGeoJSON extends GeohashStream
-{
-	/**
-	 * GeohashStreamGeoJSON
-	 *
-	 * extends GeohashStream
-	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
-	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
 	{
-		super( minLng, minLat, maxLng, maxLat, precision );
+		BASE32,
+		MIN_LNG,
+		MIN_LAT,
+		MAX_LNG,
+		MAX_LAT
+	} = require( './variables' );
+
+/**
+ * geohashToBBox
+ * @description
+ * Returns BBox bounds of specified geohash.
+ * @param   {string} hash - geohash to convert to bbox
+ * @returns {number[]} bbox array
+ * @throws  Invalid geohash.
+ */
+function geohashToBBox( hash ) {
+	if( hash.length === 0 ) {
+		throw new Error( 'Invalid geohash' );
 	}
 	
-	_read()
-	{
-		let chunk;
-		while( ( chunk = super.nextChunk() ) !== null ) {
-			this.push( JSON.stringify( toGeoJSON( chunk ) ) );
+	let
+		evenBit = true,
+		lngMin  = MIN_LNG,
+		latMin  = MIN_LAT,
+		lngMax  = MAX_LNG,
+		latMax  = MAX_LAT;
+	
+	for( let i = 0; i &lt; hash.length; i++ ) {
+		const
+			chr      = hash.charAt( i ),
+			hashChar = BASE32.indexOf( chr );
+		
+		if( hashChar === -1 ) {
+			throw new Error( 'Invalid geohash' );
 		}
 		
-		this.push( null );
+		for( let n = 4; n >= 0; n-- ) {
+			const bitN = hashChar >> n &amp; 1;
+			
+			if( evenBit ) {
+				// longitude
+				const lngMid = ( lngMin + lngMax ) / 2;
+				bitN === 1 ? lngMin = lngMid : lngMax = lngMid;
+			} else {
+				// latitude
+				const latMid = ( latMin + latMax ) / 2;
+				bitN === 1 ? latMin = latMid : latMax = latMid;
+			}
+			
+			evenBit = !evenBit;
+		}
 	}
+	
+	return [ lngMin, latMin, lngMax, latMax ];
 }
 
-module.exports = GeohashStreamGeoJSON;
+module.exports = geohashToBBox;
 </code></pre>
         </article>
     </section>

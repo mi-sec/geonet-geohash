@@ -6,11 +6,11 @@
 'use strict';
 
 const
-	chai          = require( 'chai' ),
-	expect        = chai.expect,
-	GeohashStream = require( '../src/GeohashStream' );
+	chai              = require( 'chai' ),
+	expect            = chai.expect,
+	{ GeohashStream } = require( '../index' );
 
-describe( '[geohash.stream]', () => {
+describe( '[geohash.GeohashStream]', () => {
 	it( 'should stream geohashes within a bbox',
 		done => {
 			const

@@ -156,7 +156,7 @@ Key is number of desired sig figs, value is minimum length of the geohash.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line58">line 58</a>
+        <a href="variables.js.html">variables.js</a>, <a href="variables.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -193,7 +193,8 @@ Key is number of desired sig figs, value is minimum length of the geohash.</p>
 
 <div class="description">
     <p>decode
-Decode geohash to latitude/longitude (location is approximate centre of geohash cell, to reasonable precision).</p>
+Decode geohash to latitude/longitude (location is approximate centre of geohash cell, to reasonable precision).
+Will round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places.</p>
 </div>
 
 
@@ -321,7 +322,7 @@ Decode geohash to latitude/longitude (location is approximate centre of geohash 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line236">line 236</a>
+        <a href="decode.js.html">decode.js</a>, <a href="decode.js.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -389,7 +390,7 @@ Decode geohash to latitude/longitude (location is approximate centre of geohash 
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const latlng = decode( 'u120fxw' ); // latlng: { lat: 52.205, lng: 0.1188 }</code></pre>
+    <pre class="prettyprint"><code>const latlng = decode( 'dqbvhgk' ); // latlng: { lng: -77.4804, lat: 38.8662 }</code></pre>
 
 
 
@@ -593,7 +594,7 @@ Decode geohash to latitude/longitude (location is approximate centre of geohash 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line126">line 126</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -828,7 +829,7 @@ evaluated precision.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line164">line 164</a>
+        <a href="encode.js.html">encode.js</a>, <a href="encode.js.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -1119,7 +1120,7 @@ evaluated precision.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line468">line 468</a>
+        <a href="geohashesWithinBBox.js.html">geohashesWithinBBox.js</a>, <a href="geohashesWithinBBox.js.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -1395,7 +1396,7 @@ evaluated precision.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line505">line 505</a>
+        <a href="geohashesWithinBBoxToGeoJSON.js.html">geohashesWithinBBoxToGeoJSON.js</a>, <a href="geohashesWithinBBoxToGeoJSON.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -1552,7 +1553,7 @@ evaluated precision.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line269">line 269</a>
+        <a href="geohashToBBox.js.html">geohashToBBox.js</a>, <a href="geohashToBBox.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -1839,7 +1840,7 @@ Get the geohash for the southwest corner of a bbox and how many hash steps there
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line437">line 437</a>
+        <a href="getBBoxStartingPoint.js.html">getBBoxStartingPoint.js</a>, <a href="getBBoxStartingPoint.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -1998,7 +1999,7 @@ If it's not, clamp the latitude value to the MIN/MAX</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line80">line 80</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -2159,7 +2160,7 @@ If it's not, return the latitude position relative to the amount offset</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line108">line 108</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -2320,7 +2321,7 @@ If it's not, clamp the longitude value to the MIN/MAX</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line68">line 68</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -2481,7 +2482,7 @@ If it's not, return the longitude position relative to the amount offset</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line92">line 92</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -2663,7 +2664,7 @@ If it's not, return the longitude position relative to the amount offset</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line332">line 332</a>
+        <a href="neighbor.js.html">neighbor.js</a>, <a href="neighbor.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -2872,7 +2873,7 @@ Times for 1,000,000 iterations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line366">line 366</a>
+        <a href="neighbors.js.html">neighbors.js</a>, <a href="neighbors.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -3061,7 +3062,7 @@ Calculate the size of a given geohash
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line410">line 410</a>
+        <a href="sizeOf.js.html">sizeOf.js</a>, <a href="sizeOf.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -3226,7 +3227,7 @@ Calculate the size of a given geohash
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Geohash.js.html">Geohash.js</a>, <a href="Geohash.js.html#line519">line 519</a>
+        <a href="toGeoJSON.js.html">toGeoJSON.js</a>, <a href="toGeoJSON.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -3298,7 +3299,7 @@ Calculate the size of a given geohash
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Feb 12 2019 12:16:24 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Feb 19 2019 07:50:55 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
