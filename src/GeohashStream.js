@@ -19,16 +19,31 @@ class GeohashStream extends Readable
 	 *
 	 * extends Readable stream
 	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
+	 * @param {object} opts - configuration object
+	 * @param {number} opts.minLng - bbox min longitude
+	 * @param {number} opts.minLat - bbox min latitude
+	 * @param {number} opts.maxLng - bbox max longitude
+	 * @param {number} opts.maxLat - bbox max latitude
+	 * @param {number} opts.precision - geohash precision
 	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
+	constructor( opts )
 	{
 		super();
-		this.startingBBox = getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision );
+		
+		if( opts.minLng !== +opts.minLng && opts.minLat !== +opts.minLat &&
+			opts.maxLng !== +opts.maxLng && opts.maxLat !== +opts.maxLat ) {
+			throw new Error( '[GeohashStream] minLng, minLat, maxLng, and maxLat must be numbers' );
+		} else if( opts.precision !== +opts.precision ) {
+			throw new Error( '[GeohashStream] precision must be a number' );
+		}
+		
+		this.startingBBox = getBBoxStartingPoint(
+			opts.minLng,
+			opts.minLat,
+			opts.maxLng,
+			opts.maxLat,
+			opts.precision
+		);
 		
 		this._x = -1;
 		this._y = -1;

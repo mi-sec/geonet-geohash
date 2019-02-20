@@ -16,22 +16,32 @@ class GeohashStreamGeoJSON extends GeohashStream
 	 *
 	 * extends GeohashStream
 	 *
-	 * @param {number} minLng - bbox min longitude
-	 * @param {number} minLat - bbox min latitude
-	 * @param {number} maxLng - bbox max longitude
-	 * @param {number} maxLat - bbox max latitude
-	 * @param {number} [precision=7] - geohash precision
+	 * @param {object} opts - configuration object
+	 * @param {number} opts.minLng - bbox min longitude
+	 * @param {number} opts.minLat - bbox min latitude
+	 * @param {number} opts.maxLng - bbox max longitude
+	 * @param {number} opts.maxLat - bbox max latitude
+	 * @param {number} opts.precision - geohash precision
+	 * @param {boolean} [opts.includeGeohashAsProperty=false]
+	 * include geohash string as a property in the GeoJSON
+	 * @param {boolean} [opts.includeFeatureBBox=false]
+	 * include bbox as a property in the GeoJSON
 	 */
-	constructor( minLng, minLat, maxLng, maxLat, precision = 7 )
+	constructor( opts )
 	{
-		super( minLng, minLat, maxLng, maxLat, precision );
+		super( opts );
+		
+		this.opts = opts;
+		
+		this.opts.includeGeohashAsProperty = this.opts.includeGeohashAsProperty || false;
+		this.opts.includeFeatureBBox       = this.opts.includeFeatureBBox || false;
 	}
 	
 	_read()
 	{
 		let chunk;
 		while( ( chunk = super.nextChunk() ) !== null ) {
-			this.push( JSON.stringify( toGeoJSON( chunk ) ) );
+			this.push( JSON.stringify( toGeoJSON( chunk, this.opts ) ) );
 		}
 		
 		this.push( null );

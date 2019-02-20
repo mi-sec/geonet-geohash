@@ -13,17 +13,23 @@ const
  * @description
  * convert geohash to GeoJSON
  * @param {string} hash - geohash to convert
+ * @param {object} opts - geojson options
+ * @param {boolean} [opts.includeGeohashAsProperty=false]
+ * include geohash string as a property in the GeoJSON
+ * @param {boolean} [opts.includeFeatureBBox=false]
+ * include bbox as a property in the GeoJSON
  * @returns {*} geohash to geojson
  */
-function toGeoJSON( hash ) {
+function toGeoJSON( hash, opts = {
+	includeGeohashAsProperty: false,
+	includeFeatureBBox: false
+} )
+{
 	const bbox = geohashToBBox( hash );
 	
-	return {
+	const data = {
 		type: 'Feature',
-		bbox,
-		properties: {
-			geohash: hash
-		},
+		properties: {},
 		geometry: {
 			type: 'Polygon',
 			coordinates: [
@@ -37,6 +43,16 @@ function toGeoJSON( hash ) {
 			]
 		}
 	};
+	
+	if( opts.includeGeohashAsProperty ) {
+		data.bbox = bbox;
+	}
+	
+	if( opts.includeFeatureBBox ) {
+		data.properties.geohash = hash;
+	}
+	
+	return data;
 }
 
 module.exports = toGeoJSON;

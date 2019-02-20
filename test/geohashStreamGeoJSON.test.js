@@ -16,13 +16,15 @@ describe( '[geohash.GeohashStreamGeoJSON]', () => {
 	it( 'should stream geohashes within a bbox in GeoJSON',
 		done => {
 			const
-				bbox      = [
-					0.10967016220092772,
-					52.201334010450125,
-					0.12112855911254883,
-					52.20717274359796
-				],
-				geoStream = new GeohashStreamGeoJSON( ...bbox, 7 ),
+				geoStream = new GeohashStreamGeoJSON( {
+					minLng: -158.53271484375,
+					minLat: 22.169601410638865,
+					maxLng: -157.69500732421875,
+					maxLat: 22.740723091194727,
+					precision: 5,
+					includeGeohashAsProperty: true,
+					includeFeatureBBox: true
+				} ),
 				tested    = [],
 				expected  = readFileSync( join( __dirname, './geohashStreamGeoJSON.test.results.json' ), 'utf8' );
 			

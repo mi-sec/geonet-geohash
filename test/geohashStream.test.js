@@ -14,13 +14,13 @@ describe( '[geohash.GeohashStream]', () => {
 	it( 'should stream geohashes within a bbox',
 		done => {
 			const
-				bbox      = [
-					0.10967016220092772,
-					52.201334010450125,
-					0.12112855911254883,
-					52.20717274359796
-				],
-				geoStream = new GeohashStream( ...bbox, 7 ),
+				geoStream = new GeohashStream( {
+					minLng: 0.10967016220092772,
+					minLat: 52.201334010450125,
+					maxLng: 0.12112855911254883,
+					maxLat: 52.20717274359796,
+					precision: 7
+				} ),
 				result    = [],
 				expected  = [
 					'u120fqz', 'u120fwb', 'u120fwc', 'u120fwf', 'u120fwg', 'u120fwu', 'u120fwv', 'u120fwy', 'u120fwz',
