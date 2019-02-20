@@ -19,7 +19,22 @@ module.exports = {
 		it: true,
 		JSON: true,
 		console: true,
-		Blob: true
+		'$': true,
+		document: true,
+		location: true,
+		window: true,
+		sessionStorage: true,
+		localStorage: true,
+		Blob: true,
+		L: true,
+		Materialize: true,
+		navigator: true,
+		alert: true,
+		import: true,
+		require: true,
+		module: true,
+		exports: true,
+		fetch: true
 	},
 	rules: {
 		indent: [

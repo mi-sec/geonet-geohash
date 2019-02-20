@@ -21,7 +21,9 @@ function toGeoJSON( hash ) {
 	return {
 		type: 'Feature',
 		bbox,
-		properties: {},
+		properties: {
+			geohash: hash
+		},
 		geometry: {
 			type: 'Polygon',
 			coordinates: [
