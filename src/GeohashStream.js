@@ -30,7 +30,11 @@ class GeohashStream extends Readable
 	{
 		super();
 		
-		if( opts.minLng !== +opts.minLng && opts.minLat !== +opts.minLat &&
+		if( !opts ) {
+			throw new Error(
+				'[GeohashStream] requires options defining bbox (minLng, minLat, maxLng, maxLat) and precision'
+			);
+		} else if( opts.minLng !== +opts.minLng && opts.minLat !== +opts.minLat &&
 			opts.maxLng !== +opts.maxLng && opts.maxLat !== +opts.maxLat ) {
 			throw new Error( '[GeohashStream] minLng, minLat, maxLng, and maxLat must be numbers' );
 		} else if( opts.precision !== +opts.precision ) {

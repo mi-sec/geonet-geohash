@@ -19,7 +19,7 @@ const
  * @param {number} maxLng - bbox max longitude
  * @param {number} maxLat - bbox max latitude
  * @param {number} precision - geohash precision
- * @returns {{type: string,features: {object[]}}}
+ * @returns {{features: any[], type: string}}
  * GeoJSON of geohashes within a bbox
  */
 function geohashesWithinBBoxToGeoJSON( minLng, minLat, maxLng, maxLat, precision = 7 ) {
