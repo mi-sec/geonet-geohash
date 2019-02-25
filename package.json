@@ -1,5 +1,5 @@
 {
-	"name": "@parellin/geohash",
+	"name": "@geonet/geohash",
 	"version": "1.0.7",
 	"description": "Geohash decode/encoder",
 	"main": "index.js",
@@ -10,26 +10,27 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Parellin-Technologies-LLC/geohash.git"
+		"url": "git+https://github.com/Parellin-Technologies-LLC/geonet-geohash.git"
 	},
 	"keywords": [
 		"geohash"
 	],
-	"author": "Parellin Technologies LLC",
+	"author": "Nick Soggin",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/Parellin-Technologies-LLC/geohash/issues"
+		"url": "https://github.com/Parellin-Technologies-LLC/geonet-geohash/issues"
 	},
-	"homepage": "https://github.com/Parellin-Technologies-LLC/geohash#readme",
+	"homepage": "https://github.com/Parellin-Technologies-LLC/geonet-geohash#readme",
+	"directories": {
+		"doc": "docs",
+		"src": "src",
+		"test": "test"
+	},
+	"dependencies": {},
 	"devDependencies": {
 		"chai": "4.2.0",
 		"chai-as-promised": "7.1.1",
 		"eslint": "5.10.0",
 		"mocha": "5.2.0"
-	},
-	"directories": {
-		"doc": "docs",
-		"test": "test"
-	},
-	"dependencies": {}
+	}
 }
