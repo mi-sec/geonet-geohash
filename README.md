@@ -1,6 +1,6 @@
 # @geonet/geohash
 
-[![NPM](https://nodei.co/npm/@geonet/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@geonet/lightmap)
+[![NPM](https://nodei.co/npm/@geonet/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@geonet/geohash)
 
 Geohash decode/encoder
 
