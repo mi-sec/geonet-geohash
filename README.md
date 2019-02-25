@@ -1,6 +1,6 @@
-# @parellin/geohash
+# @geonet/geohash
 
-[![NPM](https://nodei.co/npm/@parellin/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@parellin/lightmap)
+[![NPM](https://nodei.co/npm/@geonet/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@geonet/lightmap)
 
 Geohash decode/encoder
 
@@ -21,13 +21,13 @@ Geohash decode/encoder
 
 ### Installation
 
-`npm i @parellin/geohash`
+`npm i @geonet/geohash`
 
 ### Usage
 
 **Basic usage:**
 ```
-const Geohash = require( '@parellin/geohash' );
+const Geohash = require( '@geonet/geohash' );
 const hash = Geohash.encode( -77.480, 38.866, 7 ); // hash: 'dqbvhgk'
 ```
 
