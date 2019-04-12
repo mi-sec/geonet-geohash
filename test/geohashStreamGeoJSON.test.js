@@ -27,7 +27,7 @@ describe( '[geohash.GeohashStreamGeoJSON]', () => {
 				} ),
 				tested    = [],
 				expected  = readFileSync( join( __dirname, './geohashStreamGeoJSON.test.results.json' ), 'utf8' );
-			
+
 			geoStream
 				.on( 'data', d => tested.push( JSON.parse( d ) ) )
 				.on( 'end', () => {

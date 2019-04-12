@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: decode.js</title>
+    <title>JSDoc: Source: validGeohash.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: decode.js</h1>
+    <h1 class="page-title">Source: validGeohash.js</h1>
 
     
 
@@ -27,54 +27,23 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/** ****************************************************************************************************
- * File: decode.js
- * Project: geohash
- * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 19-Feb-2019
+ * File: validGeohash.js
+ * Project: geonet-geohash
+ * @author Nick Soggin &lt;iSkore@users.noreply.github.com> on 12-Apr-2019
  *******************************************************************************************************/
 'use strict';
 
-const
-	geohashToBBox = require( './geohashToBBox' );
-
 /**
- * decode
- * Decode geohash to latitude/longitude (location is approximate centre of geohash cell, to reasonable precision).
- * Will round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places.
- *
- * @param   {string} geohash - Geohash string to be converted to latitude/longitude.
- * @param   {boolean} calculateErrorOffset - calculate the natural amount of geospatial inaccuracy
- * @returns {{lng,lat}|{lng,lat,error:{lng,lat}}} - Center of geohashed location.
- * @throws  Invalid geohash.
- *
- * @example
- *     const latlng = decode( 'dqbvhgk' ); // latlng: { lng: -77.4804, lat: 38.8662 }
+ * validGeohash
+ * Determine if string is a valid geohash
+ * @param {string} geohash - geohash to test
+ * @returns {boolean} - true/false if the geohash is valid
  */
-function decode( geohash, calculateErrorOffset = false ) {
-	const
-		bbox = geohashToBBox( geohash );
-
-	let
-		lng = ( bbox[ 0 ] + bbox[ 2 ] ) / 2,
-		lat = ( bbox[ 1 ] + bbox[ 3 ] ) / 2;
-
-	if( calculateErrorOffset ) {
-		return {
-			lng, lat,
-			error: {
-				lng: bbox[ 2 ] - lng,
-				lat: bbox[ 3 ] - lat
-			}
-		};
-	} else {
-		// round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
-		lng = +lng.toFixed( ~~( 2 - Math.log( bbox[ 2 ] - bbox[ 0 ] ) / Math.LN10 ) );
-		lat = +lat.toFixed( ~~( 2 - Math.log( bbox[ 3 ] - bbox[ 1 ] ) / Math.LN10 ) );
-
-		return { lng, lat };
-	}
+function validGeohash( geohash ) {
+	return /^[0-9b-z]{1,12}$/.test( geohash );
 }
 
-module.exports = decode;
+module.exports = validGeohash;
 </code></pre>
         </article>
     </section>

@@ -26,26 +26,26 @@ function geohashToBBox( hash ) {
 	if( hash.length === 0 ) {
 		throw new Error( 'Invalid geohash' );
 	}
-	
+
 	let
 		evenBit = true,
 		lngMin  = MIN_LNG,
 		latMin  = MIN_LAT,
 		lngMax  = MAX_LNG,
 		latMax  = MAX_LAT;
-	
+
 	for( let i = 0; i < hash.length; i++ ) {
 		const
 			chr      = hash.charAt( i ),
 			hashChar = BASE32.indexOf( chr );
-		
+
 		if( hashChar === -1 ) {
 			throw new Error( 'Invalid geohash' );
 		}
-		
+
 		for( let n = 4; n >= 0; n-- ) {
 			const bitN = hashChar >> n & 1;
-			
+
 			if( evenBit ) {
 				// longitude
 				const lngMid = ( lngMin + lngMax ) / 2;
@@ -55,11 +55,11 @@ function geohashToBBox( hash ) {
 				const latMid = ( latMin + latMax ) / 2;
 				bitN === 1 ? latMin = latMid : latMax = latMid;
 			}
-			
+
 			evenBit = !evenBit;
 		}
 	}
-	
+
 	return [ lngMin, latMin, lngMax, latMax ];
 }
 

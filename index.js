@@ -57,5 +57,6 @@ module.exports = {
 	sizeOf: require( './src/sizeOf' ),
 	toGeoJSON: require( './src/toGeoJSON' ),
 	GeohashStream: require( './src/GeohashStream' ),
-	GeohashStreamGeoJSON: require( './src/GeohashStreamGeoJSON' )
+	GeohashStreamGeoJSON: require( './src/GeohashStreamGeoJSON' ),
+	validGeohash: require( './src/validGeohash' )
 };

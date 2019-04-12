@@ -25,23 +25,23 @@ function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = 7 ) {
 	const
 		hashBBox = getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision ),
 		hashList = [];
-	
+
 	const originalHash = hashBBox.hashSouthWest;
 	hashList.push( originalHash );
-	
+
 	for( let lng = 0, lat = 0; lng <= hashBBox.lngStep; lng++ ) {
 		for( ; lat < hashBBox.latStep; lat++ ) {
 			const northHash = neighbor( hashList[ hashList.length - 1 ], 'n' );
 			hashList.push( northHash );
 		}
-		
+
 		if( lng + lat !== hashBBox.lngStep + hashBBox.latStep ) {
 			const eastHash = neighbor( hashList[ hashList.length - 1 - lat ], 'e' );
 			lat            = 0;
 			hashList.push( eastHash );
 		}
 	}
-	
+
 	return hashList;
 }
 

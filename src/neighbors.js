@@ -31,7 +31,7 @@ function neighbors( geohash, asObject = false ) {
 		neighbor( geohash, 'w' ),
 		neighbor( neighbor( geohash, 'n' ), 'w' )
 	];
-	
+
 	if( asObject ) {
 		return { c: geohash, n, ne, e, se, s, sw, w, nw };
 	} else {

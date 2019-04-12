@@ -20,7 +20,7 @@ describe( '[geohash.latitudeClampRelative]', () => {
 			expect( latitudeClampRelative( -90 ) ).to.eq( -90 );
 		}
 	);
-	
+
 	it( 'should return the latitude value offset by the amount over MIN/MAX latitude (-91 -> 89)',
 		() => {
 			expect( latitudeClampRelative( 91 ) ).to.eq( -89 );

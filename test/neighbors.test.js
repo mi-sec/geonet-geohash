@@ -25,11 +25,11 @@ describe( '[geohash.neighbors]', () => {
 					'dqcjpxetzh6p'
 				],
 				actual   = neighbors( 'dqcjpxetzh6q' );
-			
+
 			expect( actual ).to.deep.eq( expected );
 		}
 	);
-	
+
 	it( 'should get hash neighbors as object',
 		() => {
 			const
@@ -45,7 +45,7 @@ describe( '[geohash.neighbors]', () => {
 					nw: 'dqcjpxetzh6p'
 				},
 				actual   = neighbors( 'dqcjpxetzh6q', true );
-			
+
 			expect( actual ).to.deep.eq( expected );
 		}
 	);

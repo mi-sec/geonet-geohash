@@ -36,17 +36,17 @@ const
  */
 function encode( lng, lat, precision = ENCODE_AUTO ) {
 	precision = determinePrecision( lng, lat, precision );
-	
+
 	lat       = +lat;
 	lng       = +lng;
 	precision = +precision;
-	
+
 	if( !( lat && lat === lat ) ||
 		!( lng && lng === lng ) ||
 		!( precision && precision === precision ) ) {
 		throw new Error( 'Invalid geohash' );
 	}
-	
+
 	let
 		geohash = '',
 		hash    = 0, // index into BASE32 map
@@ -57,7 +57,7 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 		lngMax  = MAX_LNG,
 		latMax  = MAX_LAT,
 		mid     = 0;
-	
+
 	while( geohash.length < precision ) {
 		if( evenBit ) {
 			// bisect E-W longitude
@@ -80,9 +80,9 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 				latMax = mid;
 			}
 		}
-		
+
 		evenBit = !evenBit;
-		
+
 		if( ++bit === 5 ) {
 			// 5 bits gives us a character: append it and start over
 			geohash += BASE32[ hash ];
@@ -90,7 +90,7 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 			hash = 0;
 		}
 	}
-	
+
 	return geohash;
 }
 

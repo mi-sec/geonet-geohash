@@ -26,17 +26,17 @@ function neighbor( geohash, direction ) {
 	} else if( 'nsew'.indexOf( direction ) === -1 ) {
 		throw new Error( 'Invalid direction' );
 	}
-	
+
 	const
 		lastCh = geohash.slice( -1 ),
 		type   = geohash.length % 2;
-	
+
 	let parent = geohash.slice( 0, -1 );
-	
+
 	if( BORDER_CODEX[ direction ][ type ].indexOf( lastCh ) !== -1 && parent !== '' ) {
 		parent = neighbor( parent, direction );
 	}
-	
+
 	// append letter for direction to parent
 	return parent + BASE32.charAt( NEIGHBOR_CODEX[ direction ][ type ].indexOf( lastCh ) );
 }

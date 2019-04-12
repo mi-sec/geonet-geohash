@@ -29,7 +29,7 @@ class GeohashStream extends Readable
 	constructor( opts )
 	{
 		super();
-		
+
 		if( !opts ) {
 			throw new Error(
 				'[GeohashStream] requires options defining bbox (minLng, minLat, maxLng, maxLat) and precision'
@@ -40,7 +40,7 @@ class GeohashStream extends Readable
 		} else if( opts.precision !== +opts.precision ) {
 			throw new Error( '[GeohashStream] precision must be a number' );
 		}
-		
+
 		this.startingBBox = getBBoxStartingPoint(
 			opts.minLng,
 			opts.minLat,
@@ -48,53 +48,53 @@ class GeohashStream extends Readable
 			opts.maxLat,
 			opts.precision
 		);
-		
+
 		this._x = -1;
 		this._y = -1;
 		this.x  = this.startingBBox.lngStep;
 		this.y  = this.startingBBox.latStep;
-		
+
 		this._nextChunk = null;
 	}
-	
+
 	nextChunk()
 	{
 		if( this._x === -1 && this._y === -1 ) {
 			this._nextChunk = this.startingBBox.hashSouthWest;
 			this.lastNorth  = this._nextChunk;
 			this.lastEast   = this._nextChunk;
-			
+
 			this._x++;
 			this._y++;
-			
+
 			return this._nextChunk;
 		} else if( this._x < this.x ) {
 			this._nextChunk = neighbor( this.lastEast, 'e' );
 			this.lastEast   = this._nextChunk;
 			this._x++;
-			
+
 			return this._nextChunk;
 		} else if( this._y < this.y ) {
 			this._x = 0;
-			
+
 			this._nextChunk = neighbor( this.lastNorth, 'n' );
 			this.lastNorth  = this._nextChunk;
 			this.lastEast   = this._nextChunk;
 			this._y++;
-			
+
 			return this._nextChunk;
 		}
-		
+
 		return null;
 	}
-	
+
 	_read()
 	{
 		let chunk;
 		while( ( chunk = this.nextChunk() ) !== null ) {
 			this.push( chunk );
 		}
-		
+
 		this.push( null );
 	}
 }

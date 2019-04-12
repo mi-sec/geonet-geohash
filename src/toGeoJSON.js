@@ -26,7 +26,7 @@ function toGeoJSON( hash, opts = {
 } )
 {
 	const bbox = geohashToBBox( hash );
-	
+
 	const data = {
 		type: 'Feature',
 		properties: {},
@@ -43,15 +43,15 @@ function toGeoJSON( hash, opts = {
 			]
 		}
 	};
-	
+
 	if( opts.includeGeohashAsProperty ) {
 		data.properties.geohash = hash;
 	}
-	
+
 	if( opts.includeFeatureBBox ) {
 		data.bbox = bbox;
 	}
-	
+
 	return data;
 }
 

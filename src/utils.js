@@ -85,10 +85,10 @@ function determinePrecision( lng, lat, precision = -1 ) {
 		if( lng !== +lng || lat !== +lat ) {
 			throw new Error( 'number notation required for auto precision.' );
 		}
-		
+
 		lng = longitudeClampRelative( lng );
 		lat = latitudeClampRelative( lat );
-		
+
 		if( ~~lat === lat && ~~lng === lng ) {
 			precision = 0;
 		} else {
@@ -96,11 +96,11 @@ function determinePrecision( lng, lat, precision = -1 ) {
 				latLen  = +( lat.toString( 10 ).length ),
 				lngLen  = +( lng.toString( 10 ).length ),
 				average = ( latLen + lngLen ) / 2;
-			
+
 			precision = average >= 12 ? 12 : average;
 		}
 	}
-	
+
 	return ~~precision;
 }
 

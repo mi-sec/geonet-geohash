@@ -37,12 +37,12 @@ function sizeOf( geohash ) {
 	if( geohash.length === 0 ) {
 		throw new Error( 'Invalid geohash' );
 	}
-	
+
 	const
 		precision         = geohash.length,
 		{ width, height } = PRECISION_AREA[ precision ],
 		area              = width * height;
-	
+
 	return { geohash, precision, width, height, area };
 }
 

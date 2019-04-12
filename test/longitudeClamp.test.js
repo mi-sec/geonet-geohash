@@ -20,7 +20,7 @@ describe( '[geohash.longitudeClamp]', () => {
 			expect( longitudeClamp( -180 ) ).to.eq( -180 );
 		}
 	);
-	
+
 	it( 'should return the longitude value offset by the amount over MIN/MAX longitude (-181 -> -180)',
 		() => {
 			expect( longitudeClamp( 181 ) ).to.eq( 180 );

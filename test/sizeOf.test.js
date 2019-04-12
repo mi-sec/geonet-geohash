@@ -22,7 +22,7 @@ describe( '[geohash.sizeOf]', () => {
 					area: 729.6200000000001
 				},
 				actual   = sizeOf( 'dqcjpxet' );
-			
+
 			expect( actual ).to.deep.eq( expected );
 		}
 	);

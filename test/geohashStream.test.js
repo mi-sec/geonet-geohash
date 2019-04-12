@@ -31,7 +31,7 @@ describe( '[geohash.GeohashStream]', () => {
 					'u120fxu', 'u120fxv', 'u120fxy', 'u120fxz', 'u120fzb', 'u12142p', 'u121480', 'u121481', 'u121484',
 					'u121485', 'u12148h', 'u12148j', 'u12148n', 'u12148p', 'u1214b0'
 				];
-			
+
 			geoStream
 				.on( 'data', d => result.push( d.toString() ) )
 				.on( 'end', () => {

@@ -35,7 +35,7 @@ function getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision = 7 ) {
 		boxNorthEast  = geohashToBBox( hashNorthEast ),
 		lngStep       = Math.round( ( boxNorthEast[ 0 ] - boxSouthWest[ 0 ] ) / perLng ),
 		latStep       = Math.round( ( boxNorthEast[ 1 ] - boxSouthWest[ 1 ] ) / perLat );
-	
+
 	return {
 		latStep,
 		lngStep,

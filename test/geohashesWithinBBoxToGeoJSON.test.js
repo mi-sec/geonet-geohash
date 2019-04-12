@@ -24,9 +24,9 @@ describe( '[geohash.geohashesWithinBBoxToGeoJSON]', () => {
 				),
 				extent   = [ -158.53271484375, 22.169601410638865, -157.69500732421875, 22.740723091194727 ],
 				tested   = geohashesWithinBBoxToGeoJSON( ...extent, 5 );
-			
+
 			expect( tested ).to.deep.eq( JSON.parse( expected ) );
-			
+
 			done();
 		}
 	);

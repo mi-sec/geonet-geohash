@@ -24,11 +24,11 @@ const
 function decode( geohash, calculateErrorOffset = false ) {
 	const
 		bbox = geohashToBBox( geohash );
-	
+
 	let
 		lng = ( bbox[ 0 ] + bbox[ 2 ] ) / 2,
 		lat = ( bbox[ 1 ] + bbox[ 3 ] ) / 2;
-	
+
 	if( calculateErrorOffset ) {
 		return {
 			lng, lat,
@@ -41,7 +41,7 @@ function decode( geohash, calculateErrorOffset = false ) {
 		// round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
 		lng = +lng.toFixed( ~~( 2 - Math.log( bbox[ 2 ] - bbox[ 0 ] ) / Math.LN10 ) );
 		lat = +lat.toFixed( ~~( 2 - Math.log( bbox[ 3 ] - bbox[ 1 ] ) / Math.LN10 ) );
-		
+
 		return { lng, lat };
 	}
 }

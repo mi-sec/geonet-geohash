@@ -30,20 +30,20 @@ class GeohashStreamGeoJSON extends GeohashStream
 	constructor( opts )
 	{
 		super( opts );
-		
+
 		this.opts = opts;
-		
+
 		this.opts.includeGeohashAsProperty = this.opts.includeGeohashAsProperty || false;
 		this.opts.includeFeatureBBox       = this.opts.includeFeatureBBox || false;
 	}
-	
+
 	_read()
 	{
 		let chunk;
 		while( ( chunk = super.nextChunk() ) !== null ) {
 			this.push( JSON.stringify( toGeoJSON( chunk, this.opts ) ) );
 		}
-		
+
 		this.push( null );
 	}
 }

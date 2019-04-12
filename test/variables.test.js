@@ -28,7 +28,7 @@ describe( 'geohash variables', () => {
 	it( '[geohash.BASE32] should return Geohash-specific Base32 map',
 		() => expect( BASE32 ).to.eq( '0123456789bcdefghjkmnpqrstuvwxyz' )
 	);
-	
+
 	it( '[geohash.BASE32_DICT] should return Geohash-specific Base32 map in a hex object',
 		() => expect( BASE32_DICT ).to.deep.eq( {
 			0: 0x0, 1: 0x1, 2: 0x2, 3: 0x3, 4: 0x4, 5: 0x5, 6: 0x6, 7: 0x7,
@@ -37,7 +37,7 @@ describe( 'geohash variables', () => {
 			s: 0x18, t: 0x19, u: 0x1A, v: 0x1B, w: 0x1C, x: 0x1D, y: 0x1E, z: 0x1F
 		} )
 	);
-	
+
 	it( '[geohash.PRECISION_AREA] should return Geohash-specific precision mapping to meters',
 		() => expect( PRECISION_AREA ).to.deep.eq( {
 			1: { width: 5000000, height: 5000000 },
@@ -54,7 +54,7 @@ describe( 'geohash variables', () => {
 			12: { width: 0.0372, height: 0.0186 }
 		} )
 	);
-	
+
 	it( '[geohash.NEIGHBOR_CODEX] should return neighbor codex of regional lng/lat neighbor navigation',
 		() => expect( NEIGHBOR_CODEX ).to.deep.eq( {
 			n: [ 'p0r21436x8zb9dcf5h7kjnmqesgutwvy', 'bc01fg45238967deuvhjyznpkmstqrwx' ],
@@ -63,7 +63,7 @@ describe( 'geohash variables', () => {
 			w: [ '238967debc01fg45kmstqrwxuvhjyznp', '14365h7k9dcfesgujnmqp0r2twvyx8zb' ]
 		} )
 	);
-	
+
 	it( '[geohash.BORDER_CODEX] should return border codex of the neighbor codex borders',
 		() => expect( BORDER_CODEX ).to.deep.eq( {
 			n: [ 'prxz', 'bcfguvyz' ],
@@ -72,27 +72,27 @@ describe( 'geohash variables', () => {
 			w: [ '0145hjnp', '028b' ]
 		} )
 	);
-	
+
 	it( '[geohash.SIGFIG_HASH_LENGTH] should return a Significant Figure Hash Length',
 		() => expect( SIGFIG_HASH_LENGTH ).to.deep.eq( [ 0, 5, 7, 8, 11, 12, 13, 15, 16, 17, 18 ] )
 	);
-	
+
 	it( '[geohash.ENCODE_AUTO] should return a flag that allows "precision estimation"',
 		() => expect( ENCODE_AUTO ).to.eq( -1 )
 	);
-	
+
 	it( '[geohash.MIN_LNG] should return minimum allowed longitude',
 		() => expect( MIN_LNG ).to.eq( -180 )
 	);
-	
+
 	it( '[geohash.MIN_LAT] should return minimum allowed latitude',
 		() => expect( MIN_LAT ).to.eq( -90 )
 	);
-	
+
 	it( '[geohash.MAX_LNG] should return maximum allowed longitude',
 		() => expect( MAX_LNG ).to.eq( 180 )
 	);
-	
+
 	it( '[geohash.MAX_LAT] should return maximum allowed latitude',
 		() => expect( MAX_LAT ).to.eq( 90 )
 	);
