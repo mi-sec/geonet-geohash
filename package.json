@@ -1,6 +1,6 @@
 {
 	"name": "@geonet/geohash",
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"description": "Geohash decode/encoder",
 	"main": "index.js",
 	"scripts": {
