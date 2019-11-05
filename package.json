@@ -10,7 +10,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Parellin-Technologies-LLC/geonet-geohash.git"
+		"url": "git+https://github.com/mi-sec/geonet-geohash.git"
 	},
 	"keywords": [
 		"geohash"
@@ -18,9 +18,9 @@
 	"author": "Nick Soggin",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/Parellin-Technologies-LLC/geonet-geohash/issues"
+		"url": "https://github.com/mi-sec/geonet-geohash/issues"
 	},
-	"homepage": "https://github.com/Parellin-Technologies-LLC/geonet-geohash#readme",
+	"homepage": "https://github.com/mi-sec/geonet-geohash#readme",
 	"directories": {
 		"doc": "docs",
 		"src": "src",
