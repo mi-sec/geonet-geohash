@@ -12,7 +12,7 @@
  * @returns {boolean} - true/false if the geohash is valid
  */
 function validGeohash( geohash ) {
-	return /^[0-9b-z]{1,12}$/.test( geohash );
+	return /^[0-9b-hj-km-np-z]{1,12}$/.test( geohash );
 }
 
 module.exports = validGeohash;

@@ -11,7 +11,7 @@ const
 	{ validGeohash } = require( '../index' );
 
 describe( '[geohash.validGeohash]', () => {
-	it( 'should get the width, height, area, and precision of a geohash',
+	it( 'should check if a geohash passes the regex as an acceptable format',
 		() => {
 			expect( validGeohash( 'd' ) ).to.eq( true );
 			expect( validGeohash( 'dq' ) ).to.eq( true );
@@ -25,10 +25,31 @@ describe( '[geohash.validGeohash]', () => {
 			expect( validGeohash( 'dqcjpxetzh' ) ).to.eq( true );
 			expect( validGeohash( 'dqcjpxetzh6' ) ).to.eq( true );
 			expect( validGeohash( 'dqcjpxetzh6q' ) ).to.eq( true );
-			expect( validGeohash( 'dqZcjpxet' ) ).to.eq( false );
+		}
+	);
+
+	it( 'should check if a geohash fails the regex check',
+		() => {
+			// uppercase characters are not allowed
 			expect( validGeohash( 'dqaZcjpxet' ) ).to.eq( false );
-			expect( validGeohash( 'dqacjpxet' ) ).to.eq( false );
+
+			// special characters are not allowed
 			expect( validGeohash( 'dqa@jpxet' ) ).to.eq( false );
+
+			// `a` is not a valid character
+			expect( validGeohash( 'ps1a0b2u1sdd' ) ).to.eq( false );
+
+			// `i` is not a valid character
+			expect( validGeohash( 'ps1i0b2u1sdd' ) ).to.eq( false );
+
+			// `l` is not a valid character
+			expect( validGeohash( 'ps1l0b2u1sdd' ) ).to.eq( false );
+
+			// `o` is not a valid character
+			expect( validGeohash( 'ps1o0b2u1sdd' ) ).to.eq( false );
+
+			// to many characters
+			expect( validGeohash( 'dqcjpxetzh6qq' ) ).to.eq( false );
 		}
 	);
 } );
