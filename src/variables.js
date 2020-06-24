@@ -6,13 +6,25 @@
 'use strict';
 
 const
+	/**
+	 * BASE32
+	 * @type {string}
+	 */
 	BASE32         = '0123456789bcdefghjkmnpqrstuvwxyz',
+	/**
+	 * BASE32_DICT
+	 * @type {object}
+	 */
 	BASE32_DICT    = {
 		0: 0x0, 1: 0x1, 2: 0x2, 3: 0x3, 4: 0x4, 5: 0x5, 6: 0x6, 7: 0x7,
 		8: 0x8, 9: 0x9, b: 0xA, c: 0xB, d: 0xC, e: 0xD, f: 0xE, g: 0xF,
 		h: 0x10, j: 0x11, k: 0x12, m: 0x13, n: 0x14, p: 0x15, q: 0x16, r: 0x17,
 		s: 0x18, t: 0x19, u: 0x1A, v: 0x1B, w: 0x1C, x: 0x1D, y: 0x1E, z: 0x1F
 	},
+	/**
+	 * PRECISION_AREA
+	 * @type {object}
+	 */
 	PRECISION_AREA = {
 		1: { width: 5000000, height: 5000000 },
 		2: { width: 1250000, height: 625000 },
@@ -27,22 +39,57 @@ const
 		11: { width: 0.149, height: 0.149 },
 		12: { width: 0.0372, height: 0.0186 }
 	},
+	/**
+	 * NEIGHBOR_CODEX
+	 * @type {object}
+	 */
 	NEIGHBOR_CODEX = {
 		n: [ 'p0r21436x8zb9dcf5h7kjnmqesgutwvy', 'bc01fg45238967deuvhjyznpkmstqrwx' ],
 		s: [ '14365h7k9dcfesgujnmqp0r2twvyx8zb', '238967debc01fg45kmstqrwxuvhjyznp' ],
 		e: [ 'bc01fg45238967deuvhjyznpkmstqrwx', 'p0r21436x8zb9dcf5h7kjnmqesgutwvy' ],
 		w: [ '238967debc01fg45kmstqrwxuvhjyznp', '14365h7k9dcfesgujnmqp0r2twvyx8zb' ]
 	},
+	/**
+	 * BORDER_CODEX
+	 * @type {object}
+	 */
 	BORDER_CODEX   = {
 		n: [ 'prxz', 'bcfguvyz' ],
 		s: [ '028b', '0145hjnp' ],
 		e: [ 'bcfguvyz', 'prxz' ],
 		w: [ '0145hjnp', '028b' ]
 	},
+	/**
+	 * ENCODE_AUTO
+	 * @type {number}
+	 */
 	ENCODE_AUTO    = -1,
+	/**
+	 * MIN_LNG
+	 * @description
+	 * Minimum longitude 180º west (-180º) of the prime meridian
+	 * @type {number}
+	 */
 	MIN_LNG        = -180,
+	/**
+	 * MIN_LAT
+	 * @description
+	 * Minimum latitude 90º south (-90º) of the equator
+	 * @type {number}
+	 */
 	MIN_LAT        = -90,
+	/**
+	 * MAX_LNG
+	 * @description
+	 * Maximum longitude 180º east of the prime meridian
+	 * @type {number}
+	 */
 	MAX_LNG        = 180,
+	/**
+	 * MAX_LAT
+	 * Maximum latitude 90º north of the equator
+	 * @type {number}
+	 */
 	MAX_LAT        = 90;
 
 /**

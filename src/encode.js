@@ -27,7 +27,7 @@ const
  *
  * @param   {number} lng - Longitude in degrees.
  * @param   {number} lat - Latitude in degrees.
- * @param   {number} [precision] - Number of characters in resulting geohash.
+ * @param   {number} [precision=ENCODE_AUTO] - Number of characters in resulting geohash.
  * @returns {string} Geohash of supplied latitude/longitude.
  * @throws  Invalid geohash.
  *
@@ -41,10 +41,14 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 	lng       = +lng;
 	precision = +precision;
 
-	if( !( lat && lat === lat ) ||
-		!( lng && lng === lng ) ||
-		!( precision && precision === precision ) ) {
-		throw new Error( 'Invalid geohash' );
+	if ( !( lat && lat === lat ) ) {
+		throw new Error( 'Invalid value for `lat`' );
+	}
+	else if ( !( lng && lng === lng ) ) {
+		throw new Error( 'Invalid value for `lng`' );
+	}
+	else if ( !( precision && precision === precision ) ) {
+		throw new Error( 'Invalid value for `precision`' );
 	}
 
 	let
@@ -58,24 +62,27 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 		latMax  = MAX_LAT,
 		mid     = 0;
 
-	while( geohash.length < precision ) {
-		if( evenBit ) {
+	while ( geohash.length < precision ) {
+		if ( evenBit ) {
 			// bisect E-W longitude
 			mid = ( lngMin + lngMax ) / 2;
-			if( lng >= mid ) {
+			if ( lng >= mid ) {
 				hash   = ( hash << 1 ) + 1;
 				lngMin = mid;
-			} else {
+			}
+			else {
 				hash   = hash << 1;
 				lngMax = mid;
 			}
-		} else {
+		}
+		else {
 			// bisect N-S latitude
 			mid = ( latMin + latMax ) / 2;
-			if( lat >= mid ) {
+			if ( lat >= mid ) {
 				hash   = ( hash << 1 ) + 1;
 				latMin = mid;
-			} else {
+			}
+			else {
 				hash   = hash << 1;
 				latMax = mid;
 			}
@@ -83,7 +90,7 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 
 		evenBit = !evenBit;
 
-		if( ++bit === 5 ) {
+		if ( ++bit === 5 ) {
 			// 5 bits gives us a character: append it and start over
 			geohash += BASE32[ hash ];
 			bit  = 0;

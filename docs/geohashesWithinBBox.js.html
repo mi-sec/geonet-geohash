@@ -35,7 +35,8 @@
 
 const
 	getBBoxStartingPoint = require( './getBBoxStartingPoint' ),
-	neighbor             = require( './neighbor' );
+	neighbor             = require( './neighbor' ),
+	{ ENCODE_AUTO }      = require( './variables' );
 
 /**
  * geohashesWithinBBox
@@ -46,10 +47,10 @@ const
  * @param {number} minLat - bbox min latitude
  * @param {number} maxLng - bbox max longitude
  * @param {number} maxLat - bbox max latitude
- * @param {number} precision - geohash precision
+ * @param {number} [precision=ENCODE_AUTO] - geohash precision
  * @returns {Array} - geohash array
  */
-function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = 7 ) {
+function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = ENCODE_AUTO ) {
 	const
 		hashBBox = getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision ),
 		hashList = [];
@@ -57,13 +58,13 @@ function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = 7 ) {
 	const originalHash = hashBBox.hashSouthWest;
 	hashList.push( originalHash );
 
-	for( let lng = 0, lat = 0; lng &lt;= hashBBox.lngStep; lng++ ) {
-		for( ; lat &lt; hashBBox.latStep; lat++ ) {
+	for ( let lng = 0, lat = 0; lng &lt;= hashBBox.lngStep; lng++ ) {
+		for ( ; lat &lt; hashBBox.latStep; lat++ ) {
 			const northHash = neighbor( hashList[ hashList.length - 1 ], 'n' );
 			hashList.push( northHash );
 		}
 
-		if( lng + lat !== hashBBox.lngStep + hashBBox.latStep ) {
+		if ( lng + lat !== hashBBox.lngStep + hashBBox.latStep ) {
 			const eastHash = neighbor( hashList[ hashList.length - 1 - lat ], 'e' );
 			lat            = 0;
 			hashList.push( eastHash );
@@ -84,13 +85,13 @@ module.exports = geohashesWithinBBox;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GeohashStream.html">GeohashStream</a></li><li><a href="GeohashStreamGeoJSON.html">GeohashStreamGeoJSON</a></li></ul><h3>Global</h3><ul><li><a href="global.html#decode">decode</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li><li><a href="global.html#validGeohash">validGeohash</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GeohashStream.html">GeohashStream</a></li><li><a href="GeohashStreamGeoJSON.html">GeohashStreamGeoJSON</a></li></ul><h3>Global</h3><ul><li><a href="global.html#BASE32">BASE32</a></li><li><a href="global.html#BASE32_DICT">BASE32_DICT</a></li><li><a href="global.html#BORDER_CODEX">BORDER_CODEX</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#clampRelative">clampRelative</a></li><li><a href="global.html#decode">decode</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#ENCODE_AUTO">ENCODE_AUTO</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#isNumber">isNumber</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#MAX_LAT">MAX_LAT</a></li><li><a href="global.html#MAX_LNG">MAX_LNG</a></li><li><a href="global.html#MIN_LAT">MIN_LAT</a></li><li><a href="global.html#MIN_LNG">MIN_LNG</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#NEIGHBOR_CODEX">NEIGHBOR_CODEX</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#PRECISION_AREA">PRECISION_AREA</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li><li><a href="global.html#validGeohash">validGeohash</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Apr 12 2019 14:16:25 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Jun 24 2020 19:17:12 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

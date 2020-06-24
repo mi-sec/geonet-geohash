@@ -1,9 +1,11 @@
+.DS_Store
 .git
 .github
 .idea
 .editorconfig
-.eslintrc
-.eslintrc.js
+.eslint*
+.nyc_output
+coverage
 jsdocs.js
 docs/
 test/

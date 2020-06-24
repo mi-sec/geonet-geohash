@@ -32,9 +32,10 @@ function neighbors( geohash, asObject = false ) {
 		neighbor( neighbor( geohash, 'n' ), 'w' )
 	];
 
-	if( asObject ) {
+	if ( asObject ) {
 		return { c: geohash, n, ne, e, se, s, sw, w, nw };
-	} else {
+	}
+	else {
 		return [ n, ne, e, se, s, sw, w, nw ];
 	}
 }

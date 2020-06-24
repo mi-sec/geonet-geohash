@@ -44,11 +44,11 @@ function toGeoJSON( hash, opts = {
 		}
 	};
 
-	if( opts.includeGeohashAsProperty ) {
+	if ( opts.includeGeohashAsProperty ) {
 		data.properties.geohash = hash;
 	}
 
-	if( opts.includeFeatureBBox ) {
+	if ( opts.includeFeatureBBox ) {
 		data.bbox = bbox;
 	}
 

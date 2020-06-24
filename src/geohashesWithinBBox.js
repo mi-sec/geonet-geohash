@@ -7,7 +7,8 @@
 
 const
 	getBBoxStartingPoint = require( './getBBoxStartingPoint' ),
-	neighbor             = require( './neighbor' );
+	neighbor             = require( './neighbor' ),
+	{ ENCODE_AUTO }      = require( './variables' );
 
 /**
  * geohashesWithinBBox
@@ -18,10 +19,10 @@ const
  * @param {number} minLat - bbox min latitude
  * @param {number} maxLng - bbox max longitude
  * @param {number} maxLat - bbox max latitude
- * @param {number} precision - geohash precision
+ * @param {number} [precision=ENCODE_AUTO] - geohash precision
  * @returns {Array} - geohash array
  */
-function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = 7 ) {
+function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = ENCODE_AUTO ) {
 	const
 		hashBBox = getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision ),
 		hashList = [];
@@ -29,13 +30,13 @@ function geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision = 7 ) {
 	const originalHash = hashBBox.hashSouthWest;
 	hashList.push( originalHash );
 
-	for( let lng = 0, lat = 0; lng <= hashBBox.lngStep; lng++ ) {
-		for( ; lat < hashBBox.latStep; lat++ ) {
+	for ( let lng = 0, lat = 0; lng <= hashBBox.lngStep; lng++ ) {
+		for ( ; lat < hashBBox.latStep; lat++ ) {
 			const northHash = neighbor( hashList[ hashList.length - 1 ], 'n' );
 			hashList.push( northHash );
 		}
 
-		if( lng + lat !== hashBBox.lngStep + hashBBox.latStep ) {
+		if ( lng + lat !== hashBBox.lngStep + hashBBox.latStep ) {
 			const eastHash = neighbor( hashList[ hashList.length - 1 - lat ], 'e' );
 			lat            = 0;
 			hashList.push( eastHash );

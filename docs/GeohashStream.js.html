@@ -58,14 +58,17 @@ class GeohashStream extends Readable
 	{
 		super();
 
-		if( !opts ) {
+		if ( !opts ) {
 			throw new Error(
 				'[GeohashStream] requires options defining bbox (minLng, minLat, maxLng, maxLat) and precision'
 			);
-		} else if( opts.minLng !== +opts.minLng &amp;&amp; opts.minLat !== +opts.minLat &amp;&amp;
-			opts.maxLng !== +opts.maxLng &amp;&amp; opts.maxLat !== +opts.maxLat ) {
+		}
+		else if ( opts.minLng !== +opts.minLng &amp;&amp; opts.minLat !== +opts.minLat &amp;&amp;
+			opts.maxLng !== +opts.maxLng &amp;&amp; opts.maxLat !== +opts.maxLat )
+		{
 			throw new Error( '[GeohashStream] minLng, minLat, maxLng, and maxLat must be numbers' );
-		} else if( opts.precision !== +opts.precision ) {
+		}
+		else if ( opts.precision !== +opts.precision ) {
 			throw new Error( '[GeohashStream] precision must be a number' );
 		}
 
@@ -87,7 +90,7 @@ class GeohashStream extends Readable
 
 	nextChunk()
 	{
-		if( this._x === -1 &amp;&amp; this._y === -1 ) {
+		if ( this._x === -1 &amp;&amp; this._y === -1 ) {
 			this._nextChunk = this.startingBBox.hashSouthWest;
 			this.lastNorth  = this._nextChunk;
 			this.lastEast   = this._nextChunk;
@@ -96,13 +99,15 @@ class GeohashStream extends Readable
 			this._y++;
 
 			return this._nextChunk;
-		} else if( this._x &lt; this.x ) {
+		}
+		else if ( this._x &lt; this.x ) {
 			this._nextChunk = neighbor( this.lastEast, 'e' );
 			this.lastEast   = this._nextChunk;
 			this._x++;
 
 			return this._nextChunk;
-		} else if( this._y &lt; this.y ) {
+		}
+		else if ( this._y &lt; this.y ) {
 			this._x = 0;
 
 			this._nextChunk = neighbor( this.lastNorth, 'n' );
@@ -119,7 +124,7 @@ class GeohashStream extends Readable
 	_read()
 	{
 		let chunk;
-		while( ( chunk = this.nextChunk() ) !== null ) {
+		while ( ( chunk = this.nextChunk() ) !== null ) {
 			this.push( chunk );
 		}
 
@@ -138,13 +143,13 @@ module.exports = GeohashStream;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GeohashStream.html">GeohashStream</a></li><li><a href="GeohashStreamGeoJSON.html">GeohashStreamGeoJSON</a></li></ul><h3>Global</h3><ul><li><a href="global.html#decode">decode</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li><li><a href="global.html#validGeohash">validGeohash</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GeohashStream.html">GeohashStream</a></li><li><a href="GeohashStreamGeoJSON.html">GeohashStreamGeoJSON</a></li></ul><h3>Global</h3><ul><li><a href="global.html#BASE32">BASE32</a></li><li><a href="global.html#BASE32_DICT">BASE32_DICT</a></li><li><a href="global.html#BORDER_CODEX">BORDER_CODEX</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#clampRelative">clampRelative</a></li><li><a href="global.html#decode">decode</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#ENCODE_AUTO">ENCODE_AUTO</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#isNumber">isNumber</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#MAX_LAT">MAX_LAT</a></li><li><a href="global.html#MAX_LNG">MAX_LNG</a></li><li><a href="global.html#MIN_LAT">MIN_LAT</a></li><li><a href="global.html#MIN_LNG">MIN_LNG</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#NEIGHBOR_CODEX">NEIGHBOR_CODEX</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#PRECISION_AREA">PRECISION_AREA</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li><li><a href="global.html#validGeohash">validGeohash</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Apr 12 2019 14:16:25 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Jun 24 2020 19:17:12 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

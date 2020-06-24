@@ -6,9 +6,10 @@
 'use strict';
 
 const
-	decode        = require( './decode' ),
-	encode        = require( './encode' ),
-	geohashToBBox = require( './geohashToBBox' );
+	decode          = require( './decode' ),
+	encode          = require( './encode' ),
+	geohashToBBox   = require( './geohashToBBox' ),
+	{ ENCODE_AUTO } = require( './variables' );
 
 /**
  * getBBoxStartingPoint
@@ -20,11 +21,11 @@ const
  * @param {number} minLat - minimum latitude
  * @param {number} maxLng - maximum longitude
  * @param {number} maxLat - maximum latitude
- * @param {number} precision - geohash precision
+ * @param {number} [precision=ENCODE_AUTO] - geohash precision
  * @returns {{hashSouthWest: string, lngStep: number, latStep: number}}
  * southwest hash and how many lng/lat steps to the northeast hash
  */
-function getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision = 7 ) {
+function getBBoxStartingPoint( minLng, minLat, maxLng, maxLat, precision = ENCODE_AUTO ) {
 	const
 		hashSouthWest = encode( minLng, minLat, precision ),
 		hashNorthEast = encode( maxLng, maxLat, precision ),

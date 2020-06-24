@@ -26,7 +26,8 @@ const
 		latitudeClamp,
 		longitudeClampRelative,
 		latitudeClampRelative,
-		determinePrecision
+		determinePrecision,
+		determineDirection
 	} = require( './src/utils' );
 
 module.exports = {
@@ -46,6 +47,7 @@ module.exports = {
 	longitudeClampRelative,
 	latitudeClampRelative,
 	determinePrecision,
+	determineDirection,
 	decode: require( './src/decode' ),
 	encode: require( './src/encode' ),
 	geohashesWithinBBox: require( './src/geohashesWithinBBox' ),
