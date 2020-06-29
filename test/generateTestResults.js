@@ -25,7 +25,7 @@ const
 
 writeFileSync(
 	join( __dirname, './geohashesWithinBBox.test.results.json' ),
-	JSON.stringify( _geohashesWithinBBox )
+	JSON.stringify( _geohashesWithinBBox, null, 4 )
 );
 
 console.log( 'Writing results for geohashesWithinBBoxToGeoJSON' );
@@ -35,7 +35,7 @@ const
 
 writeFileSync(
 	join( __dirname, './geohashesWithinBBoxToGeoJSON.test.results.json' ),
-	JSON.stringify( _geohashesWithinBBoxToGeoJSON )
+	JSON.stringify( _geohashesWithinBBoxToGeoJSON, null, 4 )
 );
 
 console.log( 'Writing results for GeohashStreamGeoJSON' );
@@ -57,6 +57,6 @@ geoStream
 	.on( 'end', () => {
 		writeFileSync(
 			join( __dirname, './geohashStreamGeoJSON.test.results.json' ),
-			JSON.stringify( tested )
+			JSON.stringify( tested, null, 4 )
 		);
 	} );
