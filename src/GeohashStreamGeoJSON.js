@@ -40,7 +40,7 @@ class GeohashStreamGeoJSON extends GeohashStream
 	_read()
 	{
 		let chunk;
-		while( ( chunk = super.nextChunk() ) !== null ) {
+		while ( ( chunk = super.nextChunk() ) !== null ) {
 			this.push( JSON.stringify( toGeoJSON( chunk, this.opts ) ) );
 		}
 

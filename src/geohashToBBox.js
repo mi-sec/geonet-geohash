@@ -23,7 +23,7 @@ const
  * @throws  Invalid geohash.
  */
 function geohashToBBox( hash ) {
-	if( hash.length === 0 ) {
+	if ( hash.length === 0 ) {
 		throw new Error( 'Invalid geohash' );
 	}
 
@@ -34,23 +34,24 @@ function geohashToBBox( hash ) {
 		lngMax  = MAX_LNG,
 		latMax  = MAX_LAT;
 
-	for( let i = 0; i < hash.length; i++ ) {
+	for ( let i = 0; i < hash.length; i++ ) {
 		const
 			chr      = hash.charAt( i ),
 			hashChar = BASE32.indexOf( chr );
 
-		if( hashChar === -1 ) {
+		if ( hashChar === -1 ) {
 			throw new Error( 'Invalid geohash' );
 		}
 
-		for( let n = 4; n >= 0; n-- ) {
+		for ( let n = 4; n >= 0; n-- ) {
 			const bitN = hashChar >> n & 1;
 
-			if( evenBit ) {
+			if ( evenBit ) {
 				// longitude
 				const lngMid = ( lngMin + lngMax ) / 2;
 				bitN === 1 ? lngMin = lngMid : lngMax = lngMid;
-			} else {
+			}
+			else {
 				// latitude
 				const latMid = ( latMin + latMax ) / 2;
 				bitN === 1 ? latMin = latMid : latMax = latMid;

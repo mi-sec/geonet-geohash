@@ -55,7 +55,7 @@ const
  *
  * @param   {number} lng - Longitude in degrees.
  * @param   {number} lat - Latitude in degrees.
- * @param   {number} [precision] - Number of characters in resulting geohash.
+ * @param   {number} [precision=ENCODE_AUTO] - Number of characters in resulting geohash.
  * @returns {string} Geohash of supplied latitude/longitude.
  * @throws  Invalid geohash.
  *
@@ -69,10 +69,14 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 	lng       = +lng;
 	precision = +precision;
 
-	if( !( lat &amp;&amp; lat === lat ) ||
-		!( lng &amp;&amp; lng === lng ) ||
-		!( precision &amp;&amp; precision === precision ) ) {
-		throw new Error( 'Invalid geohash' );
+	if ( !( lat &amp;&amp; lat === lat ) ) {
+		throw new Error( 'Invalid value for `lat`' );
+	}
+	else if ( !( lng &amp;&amp; lng === lng ) ) {
+		throw new Error( 'Invalid value for `lng`' );
+	}
+	else if ( !( precision &amp;&amp; precision === precision ) ) {
+		throw new Error( 'Invalid value for `precision`' );
 	}
 
 	let
@@ -86,24 +90,27 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 		latMax  = MAX_LAT,
 		mid     = 0;
 
-	while( geohash.length &lt; precision ) {
-		if( evenBit ) {
+	while ( geohash.length &lt; precision ) {
+		if ( evenBit ) {
 			// bisect E-W longitude
 			mid = ( lngMin + lngMax ) / 2;
-			if( lng >= mid ) {
+			if ( lng >= mid ) {
 				hash   = ( hash &lt;&lt; 1 ) + 1;
 				lngMin = mid;
-			} else {
+			}
+			else {
 				hash   = hash &lt;&lt; 1;
 				lngMax = mid;
 			}
-		} else {
+		}
+		else {
 			// bisect N-S latitude
 			mid = ( latMin + latMax ) / 2;
-			if( lat >= mid ) {
+			if ( lat >= mid ) {
 				hash   = ( hash &lt;&lt; 1 ) + 1;
 				latMin = mid;
-			} else {
+			}
+			else {
 				hash   = hash &lt;&lt; 1;
 				latMax = mid;
 			}
@@ -111,7 +118,7 @@ function encode( lng, lat, precision = ENCODE_AUTO ) {
 
 		evenBit = !evenBit;
 
-		if( ++bit === 5 ) {
+		if ( ++bit === 5 ) {
 			// 5 bits gives us a character: append it and start over
 			geohash += BASE32[ hash ];
 			bit  = 0;
@@ -133,13 +140,13 @@ module.exports = encode;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GeohashStream.html">GeohashStream</a></li><li><a href="GeohashStreamGeoJSON.html">GeohashStreamGeoJSON</a></li></ul><h3>Global</h3><ul><li><a href="global.html#decode">decode</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li><li><a href="global.html#validGeohash">validGeohash</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GeohashStream.html">GeohashStream</a></li><li><a href="GeohashStreamGeoJSON.html">GeohashStreamGeoJSON</a></li></ul><h3>Global</h3><ul><li><a href="global.html#BASE32">BASE32</a></li><li><a href="global.html#BASE32_DICT">BASE32_DICT</a></li><li><a href="global.html#BORDER_CODEX">BORDER_CODEX</a></li><li><a href="global.html#clamp">clamp</a></li><li><a href="global.html#clampRelative">clampRelative</a></li><li><a href="global.html#decode">decode</a></li><li><a href="global.html#determinePrecision">determinePrecision</a></li><li><a href="global.html#encode">encode</a></li><li><a href="global.html#ENCODE_AUTO">ENCODE_AUTO</a></li><li><a href="global.html#geohashesWithinBBox">geohashesWithinBBox</a></li><li><a href="global.html#geohashesWithinBBoxToGeoJSON">geohashesWithinBBoxToGeoJSON</a></li><li><a href="global.html#geohashToBBox">geohashToBBox</a></li><li><a href="global.html#getBBoxStartingPoint">getBBoxStartingPoint</a></li><li><a href="global.html#isNumber">isNumber</a></li><li><a href="global.html#latitudeClamp">latitudeClamp</a></li><li><a href="global.html#latitudeClampRelative">latitudeClampRelative</a></li><li><a href="global.html#longitudeClamp">longitudeClamp</a></li><li><a href="global.html#longitudeClampRelative">longitudeClampRelative</a></li><li><a href="global.html#MAX_LAT">MAX_LAT</a></li><li><a href="global.html#MAX_LNG">MAX_LNG</a></li><li><a href="global.html#MIN_LAT">MIN_LAT</a></li><li><a href="global.html#MIN_LNG">MIN_LNG</a></li><li><a href="global.html#neighbor">neighbor</a></li><li><a href="global.html#NEIGHBOR_CODEX">NEIGHBOR_CODEX</a></li><li><a href="global.html#neighbors">neighbors</a></li><li><a href="global.html#PRECISION_AREA">PRECISION_AREA</a></li><li><a href="global.html#SIGFIG_HASH_LENGTH">SIGFIG_HASH_LENGTH</a></li><li><a href="global.html#sizeOf">sizeOf</a></li><li><a href="global.html#toGeoJSON">toGeoJSON</a></li><li><a href="global.html#validGeohash">validGeohash</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Apr 12 2019 14:16:25 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Jun 28 2020 13:49:11 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

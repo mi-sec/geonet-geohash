@@ -14,7 +14,7 @@ const
  * Will round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places.
  *
  * @param   {string} geohash - Geohash string to be converted to latitude/longitude.
- * @param   {boolean} calculateErrorOffset - calculate the natural amount of geospatial inaccuracy
+ * @param   {boolean} [calculateErrorOffset=false] - calculate the natural amount of geospatial inaccuracy
  * @returns {{lng,lat}|{lng,lat,error:{lng,lat}}} - Center of geohashed location.
  * @throws  Invalid geohash.
  *
@@ -29,7 +29,7 @@ function decode( geohash, calculateErrorOffset = false ) {
 		lng = ( bbox[ 0 ] + bbox[ 2 ] ) / 2,
 		lat = ( bbox[ 1 ] + bbox[ 3 ] ) / 2;
 
-	if( calculateErrorOffset ) {
+	if ( calculateErrorOffset ) {
 		return {
 			lng, lat,
 			error: {
@@ -37,7 +37,8 @@ function decode( geohash, calculateErrorOffset = false ) {
 				lat: bbox[ 3 ] - lat
 			}
 		};
-	} else {
+	}
+	else {
 		// round to close to centre without excessive precision: ⌊2-log10(Δ°)⌋ decimal places
 		lng = +lng.toFixed( ~~( 2 - Math.log( bbox[ 2 ] - bbox[ 0 ] ) / Math.LN10 ) );
 		lat = +lat.toFixed( ~~( 2 - Math.log( bbox[ 3 ] - bbox[ 1 ] ) / Math.LN10 ) );

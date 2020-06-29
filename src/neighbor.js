@@ -21,9 +21,10 @@ const
  * @throws  Invalid geohash.
  */
 function neighbor( geohash, direction ) {
-	if( geohash.length === 0 ) {
+	if ( geohash.length === 0 ) {
 		throw new Error( 'Invalid geohash' );
-	} else if( 'nsew'.indexOf( direction ) === -1 ) {
+	}
+	else if ( 'nsew'.indexOf( direction ) === -1 ) {
 		throw new Error( 'Invalid direction' );
 	}
 
@@ -33,7 +34,7 @@ function neighbor( geohash, direction ) {
 
 	let parent = geohash.slice( 0, -1 );
 
-	if( BORDER_CODEX[ direction ][ type ].indexOf( lastCh ) !== -1 && parent !== '' ) {
+	if ( BORDER_CODEX[ direction ][ type ].indexOf( lastCh ) !== -1 && parent !== '' ) {
 		parent = neighbor( parent, direction );
 	}
 

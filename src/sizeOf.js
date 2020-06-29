@@ -34,7 +34,7 @@ const
  * // { geohash: 'dqcjpxetz', precision: 9, width: 4.77, height: 4.77, area: 22.7527 }
  */
 function sizeOf( geohash ) {
-	if( geohash.length === 0 ) {
+	if ( geohash.length === 0 ) {
 		throw new Error( 'Invalid geohash' );
 	}
 

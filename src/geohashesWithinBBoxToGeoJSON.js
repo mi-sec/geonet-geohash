@@ -7,7 +7,8 @@
 
 const
 	geohashesWithinBBox = require( './geohashesWithinBBox' ),
-	toGeoJSON           = require( './toGeoJSON' );
+	toGeoJSON           = require( './toGeoJSON' ),
+	{ ENCODE_AUTO }     = require( './variables' );
 
 /**
  * geohashesWithinBBoxToGeoJSON
@@ -18,11 +19,11 @@ const
  * @param {number} minLat - bbox min latitude
  * @param {number} maxLng - bbox max longitude
  * @param {number} maxLat - bbox max latitude
- * @param {number} precision - geohash precision
+ * @param {number} [precision=ENCODE_AUTO] - geohash precision
  * @returns {{features: any[], type: string}}
  * GeoJSON of geohashes within a bbox
  */
-function geohashesWithinBBoxToGeoJSON( minLng, minLat, maxLng, maxLat, precision = 7 ) {
+function geohashesWithinBBoxToGeoJSON( minLng, minLat, maxLng, maxLat, precision = ENCODE_AUTO ) {
 	return {
 		type: 'FeatureCollection',
 		features: geohashesWithinBBox( minLng, minLat, maxLng, maxLat, precision ).map( toGeoJSON )

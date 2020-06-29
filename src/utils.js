@@ -15,83 +15,139 @@ const
 	} = require( './variables' );
 
 /**
+ * isNumber
+ * @description
+ * determine if value is a valid number
+ * @param {number} n - value
+ * @return {boolean} - true if value is a number
+ */
+function isNumber( n ) {
+	return n === n && n === +n;
+}
+
+/**
+ * clamp
+ * @description
+ * basic number clamp
+ * @param {number} n - number to clamp
+ * @param {number} min - minimum value
+ * @param {number} max - maximum value
+ * @return {number|*} - clamped value
+ */
+function clamp( n, min, max ) {
+	return Math.min( Math.max( min, n ), max );
+}
+
+/**
  * longitudeClamp
- *
+ * @description
  * Determines if longitude is in the realm of possibility
  * If it's not, clamp the longitude value to the MIN/MAX
  * @param {number} lng - longitude
  * @returns {number} - longitude
  */
 function longitudeClamp( lng ) {
-	return Math.min( Math.max( MIN_LNG, lng ), MAX_LNG );
+	if ( !isNumber( lng ) ) {
+		throw new Error( 'number required for `lng`' );
+	}
+
+	return clamp( lng, MIN_LNG, MAX_LNG );
 }
 
 /**
  * latitudeClamp
- *
+ * @description
  * Determines if latitude is in the realm of possibility
  * If it's not, clamp the latitude value to the MIN/MAX
- * @param {number} lng - longitude
- * @returns {number} - longitude
+ * @param {number} lat - latitude
+ * @returns {number} - latitude
  */
-function latitudeClamp( lng ) {
-	return Math.min( Math.max( MIN_LAT, lng ), MAX_LAT );
+function latitudeClamp( lat ) {
+	if ( !isNumber( lat ) ) {
+		throw new Error( 'number required for `lat`' );
+	}
+
+	return clamp( lat, MIN_LAT, MAX_LAT );
+}
+
+/**
+ * clampRelative
+ * @description
+ * basic relative value clamp
+ * @param {number} n - number to clamp
+ * @param {number} min - minimum value
+ * @param {number} max - maximum value
+ * @return {number|*} - clamped value or offset
+ */
+function clampRelative( n, min, max ) {
+	return isNumber( n ) ?
+		n > max ? min + n % max :
+			n < min ? max + n % max :
+				n : n;
 }
 
 /**
  * longitudeClampRelative
- *
+ * @description
  * Determines if longitude is in the realm of possibility
  * If it's not, return the longitude position relative to the amount offset
  * @param {number} lng - longitude
  * @returns {number} - longitude
  */
 function longitudeClampRelative( lng ) {
-	return lng > MAX_LNG ?
-		MIN_LNG + lng % MAX_LNG :
-		lng < MIN_LNG ?
-			MAX_LNG + lng % MAX_LNG :
-			lng;
+	if ( !isNumber( lng ) ) {
+		throw new Error( 'number required for `lng`' );
+	}
+
+	return clampRelative( lng, MIN_LNG, MAX_LNG );
 }
 
 /**
  * latitudeClampRelative
- *
+ * @description
  * Determines if latitude is in the realm of possibility
  * If it's not, return the latitude position relative to the amount offset
  * @param {number} lat - latitude
  * @returns {number} - latitude
  */
 function latitudeClampRelative( lat ) {
-	return lat > MAX_LAT ?
-		MIN_LAT + lat % MAX_LAT :
-		lat < MIN_LAT ?
-			MAX_LAT + lat % MAX_LAT :
-			lat;
+	if ( !isNumber( lat ) ) {
+		throw new Error( 'number required for `lat`' );
+	}
+
+	return clampRelative( lat, MIN_LAT, MAX_LAT );
 }
 
 /**
  * determinePrecision
- *
+ * @description
  * Estimate what precision to use based on the input longitude/latitude
  *
  * @param {number} lng - longitude
  * @param {number} lat - latitude
- * @param {number?} [precision=-1] - precision override
+ * @param {number?} [precision=ENCODE_AUTO] - precision override
  * @returns {number} - precision estimate
  */
-function determinePrecision( lng, lat, precision = -1 ) {
-	if( precision === ENCODE_AUTO ) {
-		if( lng !== +lng || lat !== +lat ) {
-			throw new Error( 'number notation required for auto precision.' );
+function determinePrecision( lng, lat, precision = ENCODE_AUTO ) {
+	if ( !isNumber( precision ) ) {
+		throw new Error( 'number required for `precision`' );
+	}
+
+	if ( precision === ENCODE_AUTO ) {
+		if ( !isNumber( lng ) ) {
+			throw new Error( 'number required for `lng`' );
+		}
+		else if ( !isNumber( lat ) ) {
+			throw new Error( 'number required for `lat`' );
 		}
 
 		lng = longitudeClampRelative( lng );
 		lat = latitudeClampRelative( lat );
 
-		if( ~~lat === lat && ~~lng === lng ) {
+		if ( ~~lat === lat && ~~lng === lng ) {
 			precision = 0;
-		} else {
+		}
+		else {
 			const
 				latLen  = +( lat.toString( 10 ).length ),
 				lngLen  = +( lng.toString( 10 ).length ),
@@ -105,15 +161,25 @@ function determinePrecision( lng, lat, precision = -1 ) {
 }
 
 function determineDirection( [ x, y ] ) {
-	if( x === 0 && y === 0 ) {
+	if ( !isNumber( x ) ) {
+		throw new Error( 'number required for `x`' );
+	}
+	else if ( !isNumber( y ) ) {
+		throw new Error( 'number required for `y`' );
+	}
+	else if ( x === 0 && y === 0 ) {
 		return 'c';
-	} else if( !( x ^ y ) ) {
-		return x & y === 1 ? 'ne' : 'sw';
-	} else if( !!( x & y ) ) {
+	}
+	else if ( !( x ^ y ) ) {
+		return ( x & y ) === 1 ? 'ne' : 'sw';
+	}
+	else if ( !!( x & y ) ) {
 		return x === 1 ? 'se' : 'nw';
-	} else if( ( x | y ) > 0 ) {
+	}
+	else if ( ( x | y ) > 0 ) {
 		return !!x ? 'e' : 'n';
-	} else {
+	}
+	else {
 		return !!x ? 'w' : 's';
 	}
 }
