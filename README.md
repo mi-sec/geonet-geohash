@@ -23,6 +23,16 @@ Geohash decode/encoder
 
 `npm i @geonet/geohash`
 
+##### Deployment
+
+```
+npm run lint
+npm run test
+rm -rf docs/ && npm run docs
+npm run build
+np
+```
+
 ### Usage
 
 **Basic usage:**

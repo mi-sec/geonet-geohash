@@ -11,7 +11,7 @@
 		"./": "./"
 	},
 	"scripts": {
-		"build": "gen-esm-wrapper ./src/* ./esm/index.mjs",
+		"build": "gen-esm-wrapper ./index.js ./esm/index.mjs",
 		"docs": "jsdoc -c jsdocs.js -r",
 		"lint": "eslint .",
 		"test": "nyc --reporter=lcov --reporter=text-summary mocha",
