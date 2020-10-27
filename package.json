@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"exports": {
 		".": {
-			"require": "index.js",
+			"require": "./index.js",
 			"import": "./esm/index.mjs"
 		},
 		"./": "./"
@@ -14,7 +14,7 @@
 		"build": "gen-esm-wrapper ./index.js ./esm/index.mjs",
 		"docs": "jsdoc -c jsdocs.js -r",
 		"lint": "eslint .",
-		"test": "nyc --reporter=lcov --reporter=text-summary mocha",
+		"test": "nyc --reporter=html --reporter=text-summary mocha",
 		"testd": "nyc mocha"
 	},
 	"keywords": [
@@ -39,11 +39,12 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
-		"chai": "4.2.0",
-		"chai-as-promised": "7.1.1",
-		"eslint": "7.3.1",
-		"gen-esm-wrapper": "1.0.6",
-		"mocha": "8.0.1",
-		"nyc": "15.1.0"
+		"chai": "^4.2.0",
+		"chai-as-promised": "^7.1.1",
+		"eslint": "^7.12.1",
+		"gen-esm-wrapper": "^1.1.0",
+		"jsdoc": "^3.6.6",
+		"mocha": "^8.2.0",
+		"nyc": "^15.1.0"
 	}
 }

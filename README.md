@@ -2,6 +2,8 @@
 
 [![NPM](https://nodei.co/npm/@geonet/geohash.png?downloads=true&stars=true&downloadRank=true)](https://www.npmjs.com/package/@geonet/geohash)
 
+[coverage report](https://mi-sec.github.io/geonet-geohash/coverage/)
+
 Geohash decode/encoder
 
 | Precision | Width       | Height      |

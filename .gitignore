@@ -481,3 +481,5 @@ paket-files/
 
 # cmake debug
 cmake-build-debug
+
+docs
