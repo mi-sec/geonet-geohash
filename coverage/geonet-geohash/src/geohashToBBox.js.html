@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/25</span>
+                <span class='fraction'>25/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.3% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/23</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
@@ -149,45 +149,45 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1154x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1485x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1154x</span>
-<span class="cline-any cline-yes">1154x</span>
-<span class="cline-any cline-yes">1154x</span>
-<span class="cline-any cline-yes">1154x</span>
-<span class="cline-any cline-yes">1154x</span>
+<span class="cline-any cline-yes">1484x</span>
+<span class="cline-any cline-yes">1484x</span>
+<span class="cline-any cline-yes">1484x</span>
+<span class="cline-any cline-yes">1484x</span>
+<span class="cline-any cline-yes">1484x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1154x</span>
+<span class="cline-any cline-yes">1484x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5796x</span>
-<span class="cline-any cline-yes">5796x</span>
+<span class="cline-any cline-yes">7455x</span>
+<span class="cline-any cline-yes">7455x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5796x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5796x</span>
-<span class="cline-any cline-yes">28980x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">28980x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15064x</span>
-<span class="cline-any cline-yes">15064x</span>
+<span class="cline-any cline-yes">7455x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7454x</span>
+<span class="cline-any cline-yes">37270x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13916x</span>
-<span class="cline-any cline-yes">13916x</span>
+<span class="cline-any cline-yes">37270x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">28980x</span>
+<span class="cline-any cline-yes">19368x</span>
+<span class="cline-any cline-yes">19368x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1154x</span>
+<span class="cline-any cline-yes">17902x</span>
+<span class="cline-any cline-yes">17902x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37270x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1483x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -216,8 +216,8 @@ const
  * @throws  Invalid geohash.
  */
 function geohashToBBox( hash ) {
-	<span class="missing-if-branch" title="if path not taken" >I</span>if ( hash.length === 0 ) {
-<span class="cstat-no" title="statement not covered" >		throw new Error( 'Invalid geohash' );</span>
+	if ( hash.length === 0 ) {
+		throw new Error( 'Invalid geohash' );
 	}
 &nbsp;
 	let
@@ -232,8 +232,8 @@ function geohashToBBox( hash ) {
 			chr      = hash.charAt( i ),
 			hashChar = BASE32.indexOf( chr );
 &nbsp;
-		<span class="missing-if-branch" title="if path not taken" >I</span>if ( hashChar === -1 ) {
-<span class="cstat-no" title="statement not covered" >			throw new Error( 'Invalid geohash' );</span>
+		if ( hashChar === -1 ) {
+			throw new Error( 'Invalid geohash' );
 		}
 &nbsp;
 		for ( let n = 4; n &gt;= 0; n-- ) {
@@ -265,7 +265,7 @@ module.exports = geohashToBBox;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Oct 28 2020 13:43:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Oct 28 2020 19:36:51 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
