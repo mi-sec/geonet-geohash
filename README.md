@@ -1,1 +1,0 @@
-# @geonet/geohash
