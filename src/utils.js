@@ -185,6 +185,8 @@ function determineDirection( [ x, y ] ) {
 }
 
 module.exports = {
+	isNumber,
+	clampRelative,
 	longitudeClamp,
 	latitudeClamp,
 	longitudeClampRelative,

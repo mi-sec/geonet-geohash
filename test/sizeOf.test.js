@@ -11,6 +11,16 @@ const
 	{ sizeOf } = require( '../index' );
 
 describe( '[geohash.sizeOf]', () => {
+	it( 'should throw error "Invalid geohash"',
+		() => {
+			const
+				expected = 'Invalid geohash',
+				actual   = () => sizeOf( '' );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
 	it( 'should get the width, height, area, and precision of a geohash',
 		() => {
 			const

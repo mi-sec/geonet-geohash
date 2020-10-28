@@ -17,6 +17,46 @@ describe( '[geohash.encode]', () => {
 		lat  = 38.889865958353,
 		hash = 'dqcjpxetzh6q';
 
+	it( 'should throw error "Invalid value for `lng`"',
+		() => {
+			const
+				expected = 'Invalid value for `lng`',
+				actual   = () => encode( 'abc', 'abc', 'abc' );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
+	it( 'should throw error "Invalid value for `lat`"',
+		() => {
+			const
+				expected = 'Invalid value for `lat`',
+				actual   = () => encode( lng, 'abc', 'abc' );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
+	it( 'should throw error "Invalid value for `precision`"',
+		() => {
+			const
+				expected = 'Invalid value for `precision`',
+				actual   = () => encode( lng, lat, 'abc' );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
+	it( 'should encode lng/lat precision 1 (should select ENCODE_AUTO as default precision; precision expected to assume 3)',
+		() => {
+			const
+				expected  = hash.substr( 0, hash.length - 9 ),
+				actual    = encode( +lng.toFixed( 1 ), +lat.toFixed( 1 ) );
+
+			expect( actual ).to.eq( expected );
+		}
+	);
+
 	it( 'should encode lng/lat precision 1',
 		() => {
 			const

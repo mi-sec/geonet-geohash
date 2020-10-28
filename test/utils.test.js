@@ -9,15 +9,36 @@ const
 	chai   = require( 'chai' ),
 	expect = chai.expect,
 	{
+		isNumber,
+		clampRelative,
 		longitudeClamp,
 		latitudeClamp,
 		longitudeClampRelative,
 		latitudeClampRelative,
 		determinePrecision,
 		determineDirection
-	}      = require( '../index' );
+	}      = require( '../src/utils' );
 
 describe( 'utils', () => {
+	it( 'unexposed [isNumber] should determine if a value is a number', () => {
+		expect( isNumber( true ) ).to.eq( false );
+		expect( isNumber( 'true' ) ).to.eq( false );
+		expect( isNumber( '1' ) ).to.eq( false );
+		expect( isNumber( 0 ) ).to.eq( true );
+		expect( isNumber( 1 ) ).to.eq( true );
+		expect( isNumber( -1 ) ).to.eq( true );
+	} );
+
+	it( 'unexposed [clampRelative] should clamp n relative to specified min/max', () => {
+		expect( clampRelative( true ) ).to.eq( true );
+		expect( clampRelative( 1 ) ).to.eq( 1 );
+		expect( clampRelative( 0 ) ).to.eq( 0 );
+		expect( clampRelative( -1 ) ).to.eq( -1 );
+		expect( clampRelative( 1, 0, 1 ) ).to.eq( 1 );
+		expect( clampRelative( 1, 1, 0 ) ).to.be.NaN;
+		expect( clampRelative( 1, 'a', 'b' ) ).to.eq( 1 );
+	} );
+
 	it( '[geohash.longitudeClamp] should clamp longitude to -180-180', () => {
 		expect( longitudeClamp( -270 ) ).to.eq( -180 );
 		expect( longitudeClamp( -180 ) ).to.eq( -180 );

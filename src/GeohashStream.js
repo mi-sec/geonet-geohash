@@ -10,7 +10,10 @@ const
 
 const
 	getBBoxStartingPoint = require( './getBBoxStartingPoint' ),
-	neighbor             = require( './neighbor' );
+	neighbor             = require( './neighbor' ),
+	{
+		isNumber
+	}                    = require( './utils' );
 
 class GeohashStream extends Readable
 {
@@ -35,12 +38,13 @@ class GeohashStream extends Readable
 				'[GeohashStream] requires options defining bbox (minLng, minLat, maxLng, maxLat) and precision'
 			);
 		}
-		else if ( opts.minLng !== +opts.minLng && opts.minLat !== +opts.minLat &&
-			opts.maxLng !== +opts.maxLng && opts.maxLat !== +opts.maxLat )
-		{
+		else if (
+			!isNumber( opts.minLng ) || !isNumber( opts.minLat ) ||
+			!isNumber( opts.maxLng ) || !isNumber( opts.maxLat )
+		) {
 			throw new Error( '[GeohashStream] minLng, minLat, maxLng, and maxLat must be numbers' );
 		}
-		else if ( opts.precision !== +opts.precision ) {
+		else if ( !isNumber( opts.precision ) ) {
 			throw new Error( '[GeohashStream] precision must be a number' );
 		}
 

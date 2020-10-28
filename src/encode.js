@@ -17,7 +17,8 @@ const
 
 const
 	{
-		determinePrecision
+		determinePrecision,
+		isNumber
 	} = require( './utils' );
 
 /**
@@ -35,21 +36,21 @@ const
  *     const geohash = Geohash.encode(52.205, 0.119, 7); // geohash: 'u120fxw'
  */
 function encode( lng, lat, precision = ENCODE_AUTO ) {
-	precision = determinePrecision( lng, lat, precision );
-
-	lat       = +lat;
 	lng       = +lng;
+	lat       = +lat;
 	precision = +precision;
 
-	if ( !( lat && lat === lat ) ) {
-		throw new Error( 'Invalid value for `lat`' );
-	}
-	else if ( !( lng && lng === lng ) ) {
+	if ( !isNumber( lng ) ) {
 		throw new Error( 'Invalid value for `lng`' );
 	}
-	else if ( !( precision && precision === precision ) ) {
+	else if ( !isNumber( lat ) ) {
+		throw new Error( 'Invalid value for `lat`' );
+	}
+	else if ( !isNumber( precision ) ) {
 		throw new Error( 'Invalid value for `precision`' );
 	}
+
+	precision = determinePrecision( lng, lat, precision );
 
 	let
 		geohash = '',

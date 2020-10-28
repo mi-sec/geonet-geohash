@@ -13,6 +13,26 @@ const
 	{ geohashToBBox } = require( '../index' );
 
 describe( '[geohash.geohashToBBox]', () => {
+	it( 'should throw error "Invalid geohash"',
+		() => {
+			const
+				expected = 'Invalid geohash',
+				actual   = () => geohashToBBox( '' );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
+	it( 'should throw error "Invalid geohash"',
+		() => {
+			const
+				expected = 'Invalid geohash',
+				actual   = () => geohashToBBox( 'az' );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
 	it( 'should convert geohash to bounding box of appropriate hash size and location',
 		() => expect( geohashToBBox( 'u120fxw' ) ).to.deep.eq( [
 			0.11810302734375,

@@ -11,6 +11,48 @@ const
 	{ GeohashStream } = require( '../index' );
 
 describe( '[geohash.GeohashStream]', () => {
+	it( 'should throw error "[GeohashStream] requires options defining bbox (minLng, minLat, maxLng, maxLat) and precision"',
+		() => {
+			const
+				expected = '[GeohashStream] requires options defining bbox (minLng, minLat, maxLng, maxLat) and precision',
+				actual   = () => new GeohashStream();
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
+	it( 'should throw error "[GeohashStream] minLng, minLat, maxLng, and maxLat must be numbers"',
+		() => {
+			const
+				expected = '[GeohashStream] minLng, minLat, maxLng, and maxLat must be numbers',
+				actual   = () => new GeohashStream( {
+					minLng: 'abc',
+					minLat: 'abc',
+					maxLng: 'abc',
+					maxLat: 'abc',
+					precision: 1
+				} );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
+	it( 'should throw error "[GeohashStream] precision must be a number"',
+		() => {
+			const
+				expected = '[GeohashStream] precision must be a number',
+				actual   = () => new GeohashStream( {
+					minLng: 1,
+					minLat: 1,
+					maxLng: 1,
+					maxLat: 1,
+					precision: 'abc'
+				} );
+
+			expect( actual ).to.throw( expected );
+		}
+	);
+
 	it( 'should stream geohashes within a bbox',
 		done => {
 			const

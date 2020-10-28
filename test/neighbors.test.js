@@ -11,7 +11,7 @@ const
 	{ neighbors } = require( '../index' );
 
 describe( '[geohash.neighbors]', () => {
-	it( 'should get hash neighbors as array [N, NE, E, SE, S, SW, W, NW]',
+	it( 'should get geohash neighbors as array [N, NE, E, SE, S, SW, W, NW]',
 		() => {
 			const
 				expected = [
@@ -30,7 +30,7 @@ describe( '[geohash.neighbors]', () => {
 		}
 	);
 
-	it( 'should get hash neighbors as object',
+	it( 'should get geohash neighbors as object',
 		() => {
 			const
 				expected = {

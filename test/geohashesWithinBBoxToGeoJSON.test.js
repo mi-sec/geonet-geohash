@@ -15,6 +15,22 @@ const
 	{ geohashesWithinBBoxToGeoJSON } = require( '../index' );
 
 describe( '[geohash.geohashesWithinBBoxToGeoJSON]', () => {
+	it( 'should return GeoJSON of geohashes within a bbox (should select ENCODE_AUTO as default precision)',
+		done => {
+			const
+				expected = readFileSync(
+					join( __dirname, './geohashesWithinBBoxToGeoJSON.test.results.small.json' ),
+					'utf8'
+				),
+				extent   = [ -158.3, 22.4, -158.1, 22.5 ],
+				tested   = geohashesWithinBBoxToGeoJSON( ...extent );
+
+			expect( tested ).to.deep.eq( JSON.parse( expected ) );
+
+			done();
+		}
+	);
+
 	it( 'should return GeoJSON of geohashes within a bbox',
 		done => {
 			const
